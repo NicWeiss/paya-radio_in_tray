@@ -25,6 +25,9 @@ class Radio:
         self.current_track = self.__update_current_track()
         return self.current_track
 
+    def get_current_track(self):
+        return self.current_track
+
     def play_next(self) -> Track:
         # send prev track finalize info
         self.__send_play_end_track(self.current_track, self.play_id)
@@ -70,7 +73,8 @@ class Radio:
         )
 
     def __send_play_start_radio(self, track, batch_id):
-        self.client.rotor_station_feedback_track_started(station=self.station_id, track_id=track.id, batch_id=batch_id)
+        self.client.rotor_station_feedback_track_started(
+            station=self.station_id, track_id=track.id, batch_id=batch_id)
 
     def __send_play_end_track(self, track, play_id):
         # played_seconds = 5.0

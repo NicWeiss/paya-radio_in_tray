@@ -1,35 +1,29 @@
-import asyncio
 import threading
 import webbrowser
 from functools import partial
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
-
-def on_api_request(environ, start_response):
-    query_string = environ['QUERY_STRING']
-    print(query_string)
-
-    data = b"Hello!\n"
-    start_response("200 OK", [
-        ("Content-Type", "text/plain"),
-        ("Content-Length", str(len(data)))
-    ])
-    return iter([data])
+from backend import Router
 
 
-def run_frontend():
-  server_address = ('', 7777)
-  directory = 'frontend'
-  handler = partial(SimpleHTTPRequestHandler, directory=directory)
-  httpd = HTTPServer(server_address, handler)
-  httpd.serve_forever()
+class Main:
+    def __init__(self, config):
+        frontend = threading.Thread(name='YaRadio Frontend', target=self.run_frontend)
+        frontend.setDaemon(True)
+        frontend.start()
+
+        self.backend = Router()
+
+    def run_frontend(self):
+        server_address = ('', 7777)
+        directory = 'frontend'
+        handler = partial(SimpleHTTPRequestHandler, directory=directory)
+        httpd = HTTPServer(server_address, handler)
+        httpd.serve_forever()
 
 
-def main(arg):
-    frontend = threading.Thread(name='YaRadio Frontend', target=run_frontend)
-    frontend.setDaemon(True)
-    frontend.start()
+def run(config):
+    cls = Main(config)
 
-    webbrowser.open('http://127.0.0.1:7777')
-
-    return on_api_request
+    # webbrowser.open('http://127.0.0.1:7777')
+    return cls.backend.on_request
