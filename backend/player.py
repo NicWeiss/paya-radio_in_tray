@@ -18,10 +18,14 @@ class Player():
             return True
 
         self.track = self.radio.get_current_track()
+        track_title = self.track['title']
+        artist_name = self.track['artists'][0]['name']
+
         media = vlc.Media(f'file://{self.current_track_file}')
         self.player.set_media(media)
         self.player.play()
-        print('Playing')
+
+        print(f'[Playing] {artist_name}: {track_title}')
 
         download = threading.Thread(name='Continious playing',
                                     target=self._download,
@@ -42,6 +46,7 @@ class Player():
         if not self.next_track_file:
             return False
 
+        self.stop()
         os.remove(self.current_track_file)
         self.current_track_file = self.next_track_file
         self.play()
@@ -54,7 +59,6 @@ class Player():
             self.next_track_file = None
 
         track_id = track['id']
-        track_title = track['title']
         files = '/tmp/yaradio/'
 
         if not os.path.isdir(files):
@@ -62,7 +66,7 @@ class Player():
 
         path_to_file = f'/tmp/yaradio/{track_id}.mp3'
         track.download(path_to_file)
-        print(f'{track_title} - downloaded')
+        print(f'[DOWNLOADED] {path_to_file}')
 
         if is_next:
             self.next_track_file = path_to_file

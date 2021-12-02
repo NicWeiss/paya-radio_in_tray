@@ -14,7 +14,7 @@ class JsonEncoder(json.JSONEncoder):
         track = type(Track(0))
 
         if type(obj) in [album, artist, cover, track]:
-            return obj.__dict__
+            return vars(obj)
 
         return ''
 

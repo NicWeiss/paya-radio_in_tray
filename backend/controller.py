@@ -13,6 +13,7 @@ class Controller():
     def __init__(self):
         client = self.auth()
         self.liked_tracks = [track.id for track in client.users_likes_tracks()]
+        self.disliked_tracks = [track.id for track in client.users_dislikes_tracks()]
         radio = Radio(client)
         self.player = Player(radio)
         self.player.play()
@@ -29,7 +30,6 @@ class Controller():
         elif action == 'stop':
             self.player.stop()
         elif action == 'next':
-            self.player.stop()
             self.player.next()
 
     def getters(self, getter):
@@ -37,7 +37,8 @@ class Controller():
             track = self.player.get_track()
             return {
                 "track": track,
-                "is_liked": track.id in self.liked_tracks
+                "is_liked": track.id in self.liked_tracks,
+                "is_disliked": track.id in self.disliked_tracks,
             }
 
     def continious_play(self):
