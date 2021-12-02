@@ -3,7 +3,7 @@ import threading
 from time import sleep
 
 import vlc
-from yandex_music import Client
+from yandex_music import Client, client
 
 from backend.player import Player
 from backend.radio import Radio
@@ -11,7 +11,11 @@ from backend.radio import Radio
 
 class Controller():
     def __init__(self):
-        client = self.auth()
+        self.token_file_path = f'{os.path.dirname(os.path.realpath(__file__))}/tmp/token'
+        client = self.auth_with_token()
+        self.start_radio(client)
+
+    def start_radio(self, client):
         self.liked_tracks = [track.id for track in client.users_likes_tracks()]
         self.disliked_tracks = [track.id for track in client.users_dislikes_tracks()]
         radio = Radio(client)
@@ -22,7 +26,46 @@ class Controller():
         continious_play.setDaemon(True)
         continious_play.start()
 
-    def actions(self, action):
+    def continious_play(self):
+        while True:
+            sleep(1)
+
+            if self.player.get_state() == vlc.State.Ended:
+                self.player.next()
+
+    def auth_with_token(self):
+        client = None
+        token = None
+
+        if os.path.isfile(self.token_file_path):
+            token_file = open(self.token_file_path, 'r')
+            token = token_file.read()
+
+        if token:
+            print('---------------------- Auth by token ----------------------')
+            client = Client(token=token)
+
+        return client
+
+    def authentificate_from_credentials(self, user, password):
+        client = None
+
+        if user and password:
+            print('---------------------- Auth by credentials ----------------------')
+
+            try:
+                client = Client.from_credentials(user, password)
+            except Exception:
+                return False
+
+            token_file = open(self.token_file_path, 'w')
+            token_file.write(client.token)
+            token_file.close()
+
+        return client
+
+
+    def actions(self, action, params={}):
         if action == 'play':
             self.player.play()
         elif action == 'pause':
@@ -31,6 +74,9 @@ class Controller():
             self.player.stop()
         elif action == 'next':
             self.player.next()
+        elif action == 'auth':
+            client = self.authentificate_from_credentials(**params)
+            self.start_radio(client)
 
     def getters(self, getter):
         if getter == 'track':
@@ -40,31 +86,3 @@ class Controller():
                 "is_liked": track.id in self.liked_tracks,
                 "is_disliked": track.id in self.disliked_tracks,
             }
-
-    def continious_play(self):
-        while True:
-            sleep(1)
-
-            if self.player.get_state() == vlc.State.Ended:
-                self.player.next()
-
-    def auth(self):
-        client = None
-        token = None
-        token_file_path = f'{os.path.dirname(os.path.realpath(__file__))}/tmp/token'
-
-        if os.path.isfile(token_file_path):
-            token_file = open(token_file_path, 'r')
-            token = token_file.read()
-
-        if token:
-            print('---------------------- Auth by token ----------------------')
-            client = Client(token=token)
-        else:
-            print('---------------------- Auth by credentials ----------------------')
-            client = Client.from_credentials('dr.art.nic', '19377391Qq')
-            token_file = open(token_file_path, 'w')
-            token_file.write(client.token)
-            token_file.close()
-
-        return client

@@ -30,7 +30,8 @@ class Router:
         data = {}
 
         if 'action' in list(params.keys()):
-            self.controller.actions(params['action'])
+            self.controller.actions(
+                params['action'], {'user': params.get('user'), 'user': params.get('password')})
 
         if 'get' in list(params.keys()):
             data = self.controller.getters(params['get'])
