@@ -14,8 +14,11 @@ class Player():
         self.current_track_file = self._download(track)
 
     def play(self):
-        if self.player.get_state() == vlc.State.Playing:
+        if self.get_state() == 'Playing':
             return True
+
+        if self.get_state() == 'Paused':
+            return self.pause()
 
         self.track = self.radio.get_current_track()
         track_title = self.track['title']
