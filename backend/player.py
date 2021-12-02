@@ -52,7 +52,13 @@ class Player():
         self.play()
 
     def get_state(self):
-        return self.player.get_state()
+        return str(self.player.get_state()).split('.')[1]
+
+    def get_current_playtime(self):
+        return int(self.player.get_time())
+
+    def get_track_duration(self):
+        return int(self.track.duration_ms)
 
     def _download(self, track, is_next=False):
         if is_next:
