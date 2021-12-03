@@ -3,15 +3,18 @@ import threading
 
 import vlc
 
+from backend.loader import Loader
+
 
 class Player():
-    def __init__(self, radio):
+    def __init__(self, radio, station):
         self.next_track_file = None
         self.radio = radio
         self.player = vlc.MediaPlayer()
+        self.loader = Loader()
 
-        track = radio.start_radio('user:onyourwave', '')
-        self.current_track_file = self._download(track)
+        first_track = radio.start_radio(station, '')
+        self.current_track_file = self.loader.download(first_track)
 
     def play(self):
         if self.get_state() == 'Playing':
@@ -30,14 +33,10 @@ class Player():
 
         print(f'[Playing] {artist_name}: {track_title}')
 
-        download = threading.Thread(name='Continious playing',
-                                    target=self._download,
-                                    args=(self.radio.play_next(), True))
+        self.next_track_file = None
+        download = threading.Thread(name='Continious playing', target=self.load_next_track)
         download.setDaemon(True)
         download.start()
-
-    def get_track(self):
-        return self.track
 
     def pause(self):
         self.player.pause()
@@ -54,6 +53,12 @@ class Player():
         self.current_track_file = self.next_track_file
         self.play()
 
+    def load_next_track(self):
+        self.next_track_file = self.loader.download(self.radio.play_next())
+
+    def get_track(self):
+        return self.track
+
     def get_state(self):
         return str(self.player.get_state()).split('.')[1]
 
@@ -62,22 +67,3 @@ class Player():
 
     def get_track_duration(self):
         return int(self.track.duration_ms)
-
-    def _download(self, track, is_next=False):
-        if is_next:
-            self.next_track_file = None
-
-        track_id = track['id']
-        files = '/tmp/yaradio/'
-
-        if not os.path.isdir(files):
-            os.makedirs(files)
-
-        path_to_file = f'/tmp/yaradio/{track_id}.mp3'
-        track.download(path_to_file)
-        print(f'[DOWNLOADED] {path_to_file}')
-
-        if is_next:
-            self.next_track_file = path_to_file
-        else:
-            return path_to_file

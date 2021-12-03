@@ -20,7 +20,7 @@ class Controller():
     def start_radio(self, client):
         self.update_like_and_dislike_lists()
         self.radio = Radio(client)
-        self.player = Player(self.radio)
+        self.player = Player(self.radio, 'user:onyourwave')
         self.player.play()
 
         self.continious_play = threading.Thread(
