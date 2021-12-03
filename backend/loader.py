@@ -1,3 +1,4 @@
+import base64
 import glob
 import os
 
@@ -16,6 +17,11 @@ class Loader:
         self._download_cover(track)
 
         return downloaded_track
+
+    def open_cover(self, id):
+        image_file = open(f'{self.cover_path}/{id}.png', 'rb')
+
+        return base64.b64encode(image_file.read())
 
     def clear_data_by_id(self, id):
         track_file = f'{self.track_path}/{id}.mp3'

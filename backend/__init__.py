@@ -17,6 +17,9 @@ class JsonEncoder(json.JSONEncoder):
         if type(obj) in [album, artist, client, cover, track]:
             return vars(obj)
 
+        if type(obj) == bytes:
+            return obj.decode('utf-8')
+
         return ''
 
 
@@ -45,7 +48,8 @@ class Router:
 
         return self.create_resonse(response, code, data)
 
-    def create_resonse(self, response, code='200 ok', data={'a': 'a'}):
+    def create_resonse(self, response, code='200 ok', data={'response': 'ok'}):
+
         body = json.dumps(data, cls=JsonEncoder).encode()
         response(code, [
             ('Access-Control-Allow-Headers', '*'),

@@ -1,4 +1,3 @@
-import os
 import threading
 
 import vlc
@@ -49,7 +48,7 @@ class Player():
             return False
 
         self.stop()
-        os.remove(self.current_track_file)
+        self.loader.clear_data_by_id(self.track.id)
         self.current_track_file = self.next_track_file
         self.play()
 
@@ -58,6 +57,9 @@ class Player():
 
     def get_track(self):
         return self.track
+
+    def get_cover(self):
+        return self.loader.open_cover(self.track.id)
 
     def get_state(self):
         return str(self.player.get_state()).split('.')[1]

@@ -1,10 +1,10 @@
-import os.path
 import threading
 from time import sleep
 
 import vlc
 
 from backend.auth import Auth
+from backend.loader import Loader
 from backend.player import Player
 from backend.radio import Radio
 
@@ -131,13 +131,16 @@ class Controller():
 
     def get_track(self, params):
         track = self.player.get_track()
+        cover_in_base64 = self.player.get_cover()
 
         return {
             'track': {
+                'id': track.id,
                 'title': track.title,
                 'artists': [artist.name for artist in track.artists],
                 'is_liked': track.id in self.liked_tracks,
                 'is_disliked': track.id in self.disliked_tracks,
+                'cover': cover_in_base64
             }
         }
 
