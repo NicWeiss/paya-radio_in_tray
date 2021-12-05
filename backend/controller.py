@@ -147,6 +147,7 @@ class Controller():
     def get_player_state(self, params):
         return {
             'player_state': {
+                'playing_track_id': self.player.get_track().id,
                 'current_time': self.player.get_current_playtime(),
                 'track_duration': self.player.get_track_duration(),
                 'state': self.player.get_state()
