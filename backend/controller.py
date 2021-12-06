@@ -51,13 +51,9 @@ class Controller():
             self.client = client
             self.start_radio(self.client)
 
-<<<<<<< HEAD
             return self.get_client(None)
         else:
             return {'error': 'Can\'t authentificate, check user and password'}
-=======
-        return actions[action](params) if action in actions else {}
->>>>>>> 5233bb67e6e69e0503cfb58e02ea22fb50a816bc
 
     @check_auth
     @url('/api/logout')
@@ -109,24 +105,8 @@ class Controller():
 
         return {'id': track.id, 'is_liked': False, 'is_disliked': True}
 
-<<<<<<< HEAD
     @check_auth
     @url('/api/client')
-=======
-    def getters(self, params):
-        getter = params['get']
-        getters = {
-            'track': self.get_track,
-            'player_state': self.get_player_state,
-            'client': self.get_client
-        }
-
-        if not self.auth.is_authentificated:
-            return {'error': 'Not authentificated!'}
-
-        return getters[getter](params) if getter in getters else {}
-
->>>>>>> 5233bb67e6e69e0503cfb58e02ea22fb50a816bc
     def get_client(self, params):
         return {
             'token': self.client.token,
