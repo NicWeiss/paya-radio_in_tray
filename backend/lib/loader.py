@@ -5,7 +5,7 @@ import os
 
 class Loader:
     def __init__(self):
-        self.file_path = f'{os.path.dirname(os.path.realpath(__file__))}/tmp'
+        self.file_path = f'{os.path.dirname(os.path.realpath(__file__))}/../tmp'
         self.track_path = f'{self.file_path}/tracks'
         self.cover_path = f'{self.file_path}/covers'
 
@@ -15,6 +15,7 @@ class Loader:
     def download(self, track):
         downloaded_track = self._download_track(track)
         self._download_cover(track)
+        self._download_history_cover(track)
 
         return downloaded_track
 
@@ -23,11 +24,18 @@ class Loader:
 
         return base64.b64encode(image_file.read())
 
+    def open_history_cover(self, id):
+        image_file = open(f'{self.cover_path}/{id}_history.png', 'rb')
+
+        return base64.b64encode(image_file.read())
+
     def clear_data_by_id(self, id):
         track_file = f'{self.track_path}/{id}.mp3'
         cover_file = f'{self.cover_path}/{id}.png'
+        history_cover_file = f'{self.cover_path}/{id}_history.png'
         os.remove(track_file)
         os.remove(cover_file)
+        os.remove(history_cover_file)
 
     def _check_dirs(self):
         if not os.path.isdir(self.track_path):
@@ -65,6 +73,13 @@ class Loader:
     def _download_cover(self, track):
         cover_id = track['id']
         path_to_file = f'{self.cover_path}/{cover_id}.png'
-        track.download_cover(path_to_file, size='800x800')
+        track.download_cover(path_to_file, size='600x600')
+
+        print(f'[COVERDOWNLOADED] {path_to_file}')
+
+    def _download_history_cover(self, track):
+        cover_id = track['id']
+        path_to_file = f'{self.cover_path}/{cover_id}_history.png'
+        track.download_cover(path_to_file, size='100x100')
 
         print(f'[COVERDOWNLOADED] {path_to_file}')

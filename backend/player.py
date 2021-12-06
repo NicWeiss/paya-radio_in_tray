@@ -2,7 +2,7 @@ import threading
 
 import vlc
 
-from backend.loader import Loader
+from backend.lib.loader import Loader
 
 
 class Player():
@@ -11,6 +11,7 @@ class Player():
         self.radio = radio
         self.player = vlc.MediaPlayer()
         self.loader = Loader()
+        self.track_history = []
 
         first_track = radio.start_radio(station, '')
         self.current_track_file = self.loader.download(first_track)
@@ -47,6 +48,7 @@ class Player():
         if not self.next_track_file:
             return False
 
+        self.track_history.append((self.track, self.loader.open_history_cover(self.track.id)))
         self.stop()
         self.loader.clear_data_by_id(self.track.id)
         self.current_track_file = self.next_track_file
@@ -69,3 +71,6 @@ class Player():
 
     def get_track_duration(self):
         return int(self.track.duration_ms)
+
+    def get_history(self):
+        return self.track_history

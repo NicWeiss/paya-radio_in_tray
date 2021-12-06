@@ -5,7 +5,7 @@ from yandex_music import Client
 class Auth:
     def __init__(self):
         self.is_authentificated = False
-        self.token_file_path = f'{os.path.dirname(os.path.realpath(__file__))}/tmp/token'
+        self.token_file_path = f'{os.path.dirname(os.path.realpath(__file__))}/../tmp/token'
 
     def auth_with_token(self):
         client = None

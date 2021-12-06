@@ -4,6 +4,7 @@ from urllib.parse import parse_qsl
 from yandex_music import Album, Artist, Client, Cover, Track
 
 from backend.controller import Controller
+from backend.lib.router import Router
 
 
 class JsonEncoder(json.JSONEncoder):
@@ -23,9 +24,11 @@ class JsonEncoder(json.JSONEncoder):
         return ''
 
 
-class Router:
+class App:
     def __init__(self):
         self.controller = Controller()
+        self.router = Router()
+        self.router.collect_pathes(Controller)
 
     def on_request(self, environ, response):
         if environ['REQUEST_METHOD'] == 'OPTIONS':
@@ -33,17 +36,16 @@ class Router:
 
         data = {'action': {}, 'get': {}}
         code = '200 ok'
+        path = environ['PATH_INFO']
         query_string = environ['QUERY_STRING']
         params = dict(parse_qsl(query_string))
-        print(params)
 
-        if 'action' in list(params.keys()):
-            data['action'] = self.controller.actions(params) or {}
+        print(f'[{environ["REQUEST_METHOD"]}] {path} {params}')
 
-        if 'get' in list(params.keys()):
-            data['get'] = self.controller.getters(params) or {}
+        method = self.router.get_method(path)
+        data = getattr(self.controller, method)(params) or {}
 
-        if 'error' in data['action'] or 'error' in data['get']:
+        if 'error' in data:
             code = '401 Unauthorized'
 
         return self.create_resonse(response, code, data)

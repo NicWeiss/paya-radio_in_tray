@@ -3,7 +3,7 @@ import webbrowser
 from functools import partial
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
-from backend import Router
+from backend import App
 
 
 class Main:
@@ -12,7 +12,7 @@ class Main:
         frontend.setDaemon(True)
         frontend.start()
 
-        self.backend = Router()
+        self.backend = App()
 
     def run_frontend(self):
         server_address = ('', 7777)
