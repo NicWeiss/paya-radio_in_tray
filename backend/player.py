@@ -43,6 +43,9 @@ class Player():
     def stop(self):
         self.player.stop()
 
+    def load_next_track(self):
+        self.next_track_file = self.loader.download(self.radio.play_next())
+
     def next(self):
         if not self.next_track_file:
             return False
@@ -51,9 +54,6 @@ class Player():
         self.loader.clear_data_by_id(self.track.id)
         self.current_track_file = self.next_track_file
         self.play()
-
-    def load_next_track(self):
-        self.next_track_file = self.loader.download(self.radio.play_next())
 
     def get_track(self):
         return self.track

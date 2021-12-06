@@ -68,7 +68,7 @@ class Controller():
         if not self.auth.is_authentificated:
             return {'error': 'Not authentificated!'}
 
-        return actions[action](params)
+        return actions[action](params) if action in actions else {}
 
     def action_logout(self, params):
         self.continious_play.signal = False
@@ -117,7 +117,7 @@ class Controller():
         if not self.auth.is_authentificated:
             return {'error': 'Not authentificated!'}
 
-        return getters[getter](params)
+        return getters[getter](params) if getter in getters else {}
 
     def get_client(self, params):
         return {
