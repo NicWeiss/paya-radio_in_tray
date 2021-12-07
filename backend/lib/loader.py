@@ -22,12 +22,12 @@ class Loader:
     def open_cover(self, id):
         image_file = open(f'{self.cover_path}/{id}.png', 'rb')
 
-        return base64.b64encode(image_file.read())
+        return base64.b64encode(image_file.read()).decode('utf-8')
 
     def open_history_cover(self, id):
         image_file = open(f'{self.cover_path}/{id}_history.png', 'rb')
 
-        return base64.b64encode(image_file.read())
+        return base64.b64encode(image_file.read()).decode('utf-8')
 
     def clear_data_by_id(self, id):
         track_file = f'{self.track_path}/{id}.mp3'
