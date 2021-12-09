@@ -45,6 +45,7 @@ class Player():
         self.player.stop()
 
     def load_next_track(self):
+        # todo: положить в цикл, выполнять до тех пор пока не загрузится корректный трек
         self.next_track_file = self.loader.download(self.radio.play_next())
 
     def next(self):

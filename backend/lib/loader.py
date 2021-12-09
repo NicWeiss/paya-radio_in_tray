@@ -20,11 +20,13 @@ class Loader:
         return downloaded_track
 
     def open_cover(self, id):
+        # todo: если не смог открыть - вернуть заглушку
         image_file = open(f'{self.cover_path}/{id}.png', 'rb')
 
         return base64.b64encode(image_file.read()).decode('utf-8')
 
     def open_history_cover(self, id):
+        # todo: если не смог открыть - вернуть заглушку
         image_file = open(f'{self.cover_path}/{id}_history.png', 'rb')
 
         return base64.b64encode(image_file.read()).decode('utf-8')
@@ -33,6 +35,8 @@ class Loader:
         track_file = f'{self.track_path}/{id}.mp3'
         cover_file = f'{self.cover_path}/{id}.png'
         history_cover_file = f'{self.cover_path}/{id}_history.png'
+
+        # todo: если не смог удалить - игнор
         os.remove(track_file)
         os.remove(cover_file)
         os.remove(history_cover_file)
@@ -64,6 +68,7 @@ class Loader:
     def _download_track(self, track):
         track_id = track['id']
         path_to_file = f'{self.track_path}/{track_id}.mp3'
+        # todo: если не смог загрузить - вернуть False
         track.download(path_to_file)
 
         print(f'[TRACK DOWNLOADED] {path_to_file}')
