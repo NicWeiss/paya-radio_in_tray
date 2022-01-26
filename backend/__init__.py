@@ -38,12 +38,17 @@ class App:
         code = '200 ok'
         path = environ['PATH_INFO']
         query_string = environ['QUERY_STRING']
-        params = dict(parse_qsl(query_string))
+        query_params = dict(parse_qsl(query_string))
+        request_params = {}
 
-        print(f'[{environ["REQUEST_METHOD"]}] {path} {params}')
+        if request_body_size := int(environ.get('CONTENT_LENGTH', 0)):
+            request_params = environ['wsgi.input'].read(request_body_size)
+
+        print(f'[{environ["REQUEST_METHOD"]}] {path} {query_params} {request_params}')
 
         method = self.router.get_method(path)
-        data = getattr(self.controller, method)(params) or {}
+        # TODO: ниже добавить передачу request_params, если понадобится
+        data = getattr(self.controller, method)(query_params) or {}
 
         if 'error' in data:
             code = '401 Unauthorized'
