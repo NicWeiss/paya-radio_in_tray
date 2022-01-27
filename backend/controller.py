@@ -5,6 +5,7 @@ from backend.lib.auth import Auth
 from backend.lib.helpers import check_auth
 from backend.lib.radio import Radio
 from backend.lib.router import url
+from backend.lib.tray_menu import TrayMenu
 from backend.player import Player
 
 
@@ -23,6 +24,8 @@ class Controller():
         self.radio = Radio(client)
         self.player = Player(self.radio, 'user:onyourwave')
         self.player.play()
+        self.tray_menu = TrayMenu(self.player, self.action_like, self.action_dislike)
+        self.tray_menu.notify_track_title()
 
         self.continious_play = threading.Thread(
             name='Continious playing', target=self.continious_play)
@@ -40,6 +43,7 @@ class Controller():
             try:
                 if self.player.get_state() == 'Ended':
                     self.player.next()
+                    self.tray_menu.notify_track_title()
             except Exception:
                 return
 
@@ -85,6 +89,7 @@ class Controller():
     @url('/api/next')
     def action_next(self, params):
         self.player.next()
+        self.tray_menu.notify_track_title()
 
     @check_auth
     @url('/api/like')

@@ -4,6 +4,7 @@ from functools import partial
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 from backend import App
+from backend.lib.helpers import get_ip
 
 
 class Main:
@@ -15,7 +16,8 @@ class Main:
         self.backend = App()
 
     def run_frontend(self):
-        server_address = ('', 7777)
+        server_address = (get_ip(), 7777)
+        print(f'Run frontend on {server_address}')
         directory = 'frontend'
         handler = partial(SimpleHTTPRequestHandler, directory=directory)
         httpd = HTTPServer(server_address, handler)
