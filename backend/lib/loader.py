@@ -13,21 +13,32 @@ class Loader:
         self._clear_data()
 
     def download(self, track):
-        downloaded_track = self._download_track(track)
+        self._download_track(track)
         self._download_cover(track)
         self._download_history_cover(track)
 
-        return downloaded_track
+    def get_track_path(self, track):
+        return f'{self.track_path}/{track["id"]}.mp3'
 
     def open_cover(self, id):
         # todo: если не смог открыть - вернуть заглушку
-        image_file = open(f'{self.cover_path}/{id}.png', 'rb')
+        image_file = None
+
+        try:
+            image_file = open(f'{self.cover_path}/{id}.png', 'rb')
+        except Exception:
+            return None
 
         return base64.b64encode(image_file.read()).decode('utf-8')
 
     def open_history_cover(self, id):
         # todo: если не смог открыть - вернуть заглушку
-        image_file = open(f'{self.cover_path}/{id}_history.png', 'rb')
+        image_file = None
+
+        try:
+            image_file = open(f'{self.cover_path}/{id}_history.png', 'rb')
+        except Exception:
+            return None
 
         return base64.b64encode(image_file.read()).decode('utf-8')
 
@@ -37,9 +48,12 @@ class Loader:
         history_cover_file = f'{self.cover_path}/{id}_history.png'
 
         # todo: если не смог удалить - игнор
-        os.remove(track_file)
-        os.remove(cover_file)
-        os.remove(history_cover_file)
+        try:
+            os.remove(track_file)
+            os.remove(cover_file)
+            os.remove(history_cover_file)
+        except Exception:
+            pass
 
     def _check_dirs(self):
         if not os.path.isdir(self.track_path):
@@ -72,8 +86,6 @@ class Loader:
         track.download(path_to_file)
 
         print(f'[TRACK DOWNLOADED] {path_to_file}')
-
-        return path_to_file
 
     def _download_cover(self, track):
         cover_id = track['id']

@@ -93,7 +93,7 @@ class Controller():
 
     @check_auth
     @url('/api/like')
-    def action_like(self, params):
+    def action_like(self, params=None):
         track = self.player.get_track()
         self.client.users_likes_tracks_add(track.id)
         self.update_like_and_dislike_lists()
@@ -102,7 +102,7 @@ class Controller():
 
     @check_auth
     @url('/api/dislike')
-    def action_dislike(self, params):
+    def action_dislike(self, params=None):
         track = self.player.get_track()
         self.client.users_dislikes_tracks_add(track.id)
         self.update_like_and_dislike_lists()

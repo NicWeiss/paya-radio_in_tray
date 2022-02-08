@@ -1,4 +1,5 @@
 import threading
+from time import sleep
 
 import vlc
 
@@ -7,6 +8,7 @@ from backend.lib.loader import Loader
 
 class Player():
     def __init__(self, radio, station):
+        self.is_waiting = False
         self.next_track_file = None
         self.radio = radio
         self.player = vlc.MediaPlayer()
@@ -14,7 +16,8 @@ class Player():
         self.track_history = []
 
         first_track = radio.start_radio(station, '')
-        self.current_track_file = self.loader.download(first_track)
+        self.loader.download(first_track)
+        self.current_track_file = self.loader.get_track_path(first_track)
 
     def play(self):
         if self.get_state() == 'Playing':
@@ -45,16 +48,24 @@ class Player():
         self.player.stop()
 
     def load_next_track(self):
+        track = self.radio.play_next()
+        self.next_track_file = None
+
         # todo: положить в цикл, выполнять до тех пор пока не загрузится корректный трек
-        self.next_track_file = self.loader.download(self.radio.play_next())
+        self.loader.download(track)
+        self.next_track_file = self.loader.get_track_path(track)
 
     def next(self):
-        if not self.next_track_file:
-            return False
-
+        self.is_waiting = True
         self.track_history.append((self.track, self.loader.open_history_cover(self.track.id)))
         self.stop()
         self.loader.clear_data_by_id(self.track.id)
+
+        while self.next_track_file == None:
+            print('Waiting next track')
+            sleep(1)
+
+        self.is_waiting = False
         self.current_track_file = self.next_track_file
         self.play()
 
