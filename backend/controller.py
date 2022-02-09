@@ -42,14 +42,13 @@ class Controller():
 
             try:
                 if self.player.get_state() == 'Ended':
-                    self.player.next()
-                    self.tray_menu.notify_track_title()
+                    self.player.next(self._on_next_track)
             except Exception:
                 return
 
     @url('/api/auth')
-    def actions(self, params):
-        credentials = params.get('user'), params.get('password')
+    def action_auth(self, query_params=None):
+        credentials = query_params.get('user'), query_params.get('password')
 
         if client := self.auth.authentificate_from_credentials(*credentials):
             self.client = client
@@ -61,7 +60,7 @@ class Controller():
 
     @check_auth
     @url('/api/logout')
-    def action_logout(self, params):
+    def action_logout(self, query_params=None):
         self.continious_play.signal = False
         self.continious_play = None
         self.client = None
@@ -72,28 +71,30 @@ class Controller():
 
     @check_auth
     @url('/api/play')
-    def action_play(self, params):
+    def action_play(self, query_params=None):
         self.player.play()
 
     @check_auth
     @url('/api/pause')
-    def action_pause(self, params):
+    def action_pause(self, query_params=None):
         self.player.pause()
 
     @check_auth
     @url('/api/stop')
-    def action_stop(self, params):
+    def action_stop(self, query_params=None):
         self.player.stop()
 
     @check_auth
     @url('/api/next')
-    def action_next(self, params):
-        self.player.next()
+    def action_next(self, query_params=None):
+        self.player.next(self._on_next_track)
+
+    def _on_next_track(self):
         self.tray_menu.notify_track_title()
 
     @check_auth
     @url('/api/like')
-    def action_like(self, params=None):
+    def action_like(self, query_params=None):
         track = self.player.get_track()
         self.client.users_likes_tracks_add(track.id)
         self.update_like_and_dislike_lists()
@@ -102,7 +103,7 @@ class Controller():
 
     @check_auth
     @url('/api/dislike')
-    def action_dislike(self, params=None):
+    def action_dislike(self, query_params=None):
         track = self.player.get_track()
         self.client.users_dislikes_tracks_add(track.id)
         self.update_like_and_dislike_lists()
@@ -112,7 +113,7 @@ class Controller():
 
     @check_auth
     @url('/api/client')
-    def get_client(self, params):
+    def get_client(self, query_params=None):
         return {
             'token': self.client.token,
             'uid': self.client.me.account.uid,
@@ -124,7 +125,7 @@ class Controller():
 
     @check_auth
     @url('/api/player_state')
-    def get_player_state(self, params):
+    def get_player_state(self, query_params=None):
         return {
             'player_state': {
                 'playing_track_id': self.player.get_track().id,
@@ -136,7 +137,7 @@ class Controller():
 
     @check_auth
     @url('/api/track')
-    def get_track(self, params):
+    def get_track(self, query_params=None):
         track = self.player.get_track()
         cover = self.player.get_cover()
 
@@ -144,12 +145,9 @@ class Controller():
 
     @check_auth
     @url('/api/history')
-    def get_history(self, params):
+    def get_history(self, query_params=None):
         history = self.player.get_history()
         jsonified_history = {'history': []}
-
-        # import pdb
-        # pdb.set_trace()
 
         for track, cover in history:
             jsonified_history['history'].append(self.build_track(track, cover))

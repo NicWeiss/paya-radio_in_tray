@@ -3,12 +3,13 @@ from time import sleep
 
 import vlc
 
+from backend.lib.helpers import clear_lock, is_locked, set_lock
 from backend.lib.loader import Loader
 
 
 class Player():
     def __init__(self, radio, station):
-        self.is_waiting = False
+        clear_lock('next')
         self.next_track_file = None
         self.radio = radio
         self.player = vlc.MediaPlayer()
@@ -48,26 +49,41 @@ class Player():
         self.player.stop()
 
     def load_next_track(self):
-        track = self.radio.play_next()
+        is_track_loaded = False
         self.next_track_file = None
 
-        # todo: положить в цикл, выполнять до тех пор пока не загрузится корректный трек
-        self.loader.download(track)
+        while is_track_loaded == False:
+            track = self.radio.play_next()
+            is_track_loaded = self.loader.download(track)
+
         self.next_track_file = self.loader.get_track_path(track)
 
-    def next(self):
-        self.is_waiting = True
+    def next(self, callback=None):
+        next_thread = threading.Thread(name='Start next track',
+                                       target=self._next_as_background, args=[callback])
+        next_thread.start()
+
+    def _next_as_background(self, callback):
+        if is_locked('next'):
+            return
+
+        set_lock('next')
         self.track_history.append((self.track, self.loader.open_history_cover(self.track.id)))
         self.stop()
-        self.loader.clear_data_by_id(self.track.id)
 
         while self.next_track_file == None:
             print('Waiting next track')
             sleep(1)
 
-        self.is_waiting = False
+        self.loader.clear_data_by_id(self.track.id)
         self.current_track_file = self.next_track_file
         self.play()
+
+        if callback:
+            callback()
+
+        clear_lock('next')
+        exit(0)
 
     def get_track(self):
         return self.track

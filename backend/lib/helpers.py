@@ -1,4 +1,5 @@
 import functools
+import os
 import socket
 
 
@@ -23,3 +24,24 @@ def get_ip():
         pass
 
     return ip
+
+
+def set_lock(name):
+    lock_path = f'{os.path.dirname(os.path.realpath(__file__))}/../tmp/{name}'
+    file = open(lock_path, "w+")
+    file.write("Locked")
+    file.close()
+
+
+def is_locked(name):
+    lock_path = f'{os.path.dirname(os.path.realpath(__file__))}/../tmp/{name}'
+    return os.path.isfile(lock_path)
+
+
+def clear_lock(name):
+    lock_path = f'{os.path.dirname(os.path.realpath(__file__))}/../tmp/{name}'
+
+    try:
+        os.remove(lock_path)
+    except Exception:
+        pass

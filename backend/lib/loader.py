@@ -5,6 +5,7 @@ import os
 
 class Loader:
     def __init__(self):
+        self.assets_path = f'{os.path.dirname(os.path.realpath(__file__))}/../assets'
         self.file_path = f'{os.path.dirname(os.path.realpath(__file__))}/../tmp'
         self.track_path = f'{self.file_path}/tracks'
         self.cover_path = f'{self.file_path}/covers'
@@ -13,32 +14,32 @@ class Loader:
         self._clear_data()
 
     def download(self, track):
-        self._download_track(track)
+        is_track_ready = self._download_track(track)
         self._download_cover(track)
         self._download_history_cover(track)
+
+        return is_track_ready
 
     def get_track_path(self, track):
         return f'{self.track_path}/{track["id"]}.mp3'
 
     def open_cover(self, id):
-        # todo: если не смог открыть - вернуть заглушку
         image_file = None
 
         try:
             image_file = open(f'{self.cover_path}/{id}.png', 'rb')
         except Exception:
-            return None
+            image_file = open(f'{self.assets_path}/default_cover.png', 'rb')
 
         return base64.b64encode(image_file.read()).decode('utf-8')
 
     def open_history_cover(self, id):
-        # todo: если не смог открыть - вернуть заглушку
         image_file = None
 
         try:
             image_file = open(f'{self.cover_path}/{id}_history.png', 'rb')
         except Exception:
-            return None
+            image_file = open(f'{self.assets_path}/default_cover.png', 'rb')
 
         return base64.b64encode(image_file.read()).decode('utf-8')
 
@@ -47,7 +48,6 @@ class Loader:
         cover_file = f'{self.cover_path}/{id}.png'
         history_cover_file = f'{self.cover_path}/{id}_history.png'
 
-        # todo: если не смог удалить - игнор
         try:
             os.remove(track_file)
             os.remove(cover_file)
@@ -82,10 +82,15 @@ class Loader:
     def _download_track(self, track):
         track_id = track['id']
         path_to_file = f'{self.track_path}/{track_id}.mp3'
-        # todo: если не смог загрузить - вернуть False
-        track.download(path_to_file)
+
+        try:
+            track.download(path_to_file)
+        except Exception:
+            return False
 
         print(f'[TRACK DOWNLOADED] {path_to_file}')
+
+        return True
 
     def _download_cover(self, track):
         cover_id = track['id']

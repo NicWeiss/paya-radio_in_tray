@@ -48,7 +48,7 @@ class App:
 
         method = self.router.get_method(path)
         # TODO: ниже добавить передачу request_params, если понадобится
-        data = getattr(self.controller, method)(query_params) or {}
+        data = getattr(self.controller, method)(query_params=query_params) or {}
 
         if 'error' in data:
             code = '401 Unauthorized'
