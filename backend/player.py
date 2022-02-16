@@ -39,7 +39,6 @@ class Player():
 
         self.next_track_file = None
         download = threading.Thread(name='Continious playing', target=self.load_next_track)
-        download.setDaemon(True)
         download.start()
 
     def pause(self):

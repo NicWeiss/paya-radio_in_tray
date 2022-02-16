@@ -10,7 +10,6 @@ from backend.player import Player
 
 
 class Controller():
-    test = 'sccss'
 
     def __init__(self):
         self.auth = Auth()
