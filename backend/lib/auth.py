@@ -1,15 +1,27 @@
 import os
+
 from yandex_music import Client
+from yandex_music.utils.request import Request
+
+
+# from .client import Client
 
 
 class Auth:
-    def __init__(self):
+    def __init__(self, config):
+        proxy = config["backend"]["proxy"]
+        self.proxy_url = ''
         self.is_authentificated = False
         self.token_file_path = f'{os.path.dirname(os.path.realpath(__file__))}/../tmp/token'
+
+        if proxy and proxy['enabled']:
+            self.proxy_url = f'http://{proxy["adress"]}:{proxy["port"]}/'
+            print(f'Proxy is - {self.proxy_url}')
 
     def auth_with_token(self):
         client = None
         token = None
+        request = Request(proxy_url=self.proxy_url)
 
         if os.path.isfile(self.token_file_path):
             token_file = open(self.token_file_path, 'r')
@@ -17,7 +29,7 @@ class Auth:
 
         if token:
             print('---------------------- Auth by token ----------------------')
-            client = Client(token=token)
+            client = Client(token=token, request=request)
             self.is_authentificated = True
         else:
             print('------------------ REQIRED AUTHENTIFICATION ------------------')
@@ -26,12 +38,13 @@ class Auth:
 
     def authentificate_from_credentials(self, user, password):
         client = None
+        request = Request(proxy_url=self.proxy_url)
 
         if user and password:
             print('---------------------- Auth by credentials ----------------------')
 
             try:
-                client = Client.from_credentials(user, password)
+                client = Client.from_credentials(user, password, request=request)
             except Exception:
                 return False
 

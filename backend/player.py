@@ -52,8 +52,10 @@ class Player():
         self.next_track_file = None
 
         while is_track_loaded == False:
-            track = self.radio.play_next()
-            is_track_loaded = self.loader.download(track)
+            if track := self.radio.play_next():
+                is_track_loaded = self.loader.download(track)
+            else:
+                print('Can\'t get next track')
 
         self.next_track_file = self.loader.get_track_path(track)
 

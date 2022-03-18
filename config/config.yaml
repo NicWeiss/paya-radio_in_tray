@@ -4,3 +4,7 @@ frontend:
 backend:
   port: 7778
   is_accept_outside_query: false
+  proxy:
+    enabled: true
+    adress: "notifier.gotdns.ch"
+    port: 8475

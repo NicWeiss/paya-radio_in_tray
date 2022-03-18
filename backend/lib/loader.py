@@ -95,13 +95,19 @@ class Loader:
     def _download_cover(self, track):
         cover_id = track['id']
         path_to_file = f'{self.cover_path}/{cover_id}.png'
-        track.download_cover(path_to_file, size='600x600')
+        try:
+            track.download_cover(path_to_file, size='600x600')
+        except Exception:
+            return False
 
         print(f'[COVERDOWNLOADED] {path_to_file}')
 
     def _download_history_cover(self, track):
         cover_id = track['id']
         path_to_file = f'{self.cover_path}/{cover_id}_history.png'
-        track.download_cover(path_to_file, size='100x100')
+        try:
+            track.download_cover(path_to_file, size='100x100')
+        except Exception:
+            return False
 
         print(f'[COVERDOWNLOADED] {path_to_file}')

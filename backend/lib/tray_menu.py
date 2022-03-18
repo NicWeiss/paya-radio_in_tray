@@ -1,5 +1,4 @@
 import os
-import subprocess
 import threading
 from time import sleep
 
@@ -22,13 +21,13 @@ class TrayMenu():
     def create_menu(self):
         image = Image.open(f"{os.path.dirname(__file__)}/../assets/icon.png")
         menu = (
-            item('Exit', self.close_app),
+            item('Next', self.next),
+            item('Play / Pause', self.player.pause),
             item(' ', self.stub),
+            item('Like', self.action_like),
             item('Dislike', self.dislike),
             item(' ', self.stub),
-            item('Play / Pause', self.player.pause),
-            item('Like', self.action_like),
-            item('Next', self.next)
+            item('Exit', self.close_app)
         )
         self.icon = pystray.Icon("Ya Radio", image, "Ya Radio", menu)
         self.icon.run()

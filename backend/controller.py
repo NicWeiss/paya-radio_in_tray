@@ -11,8 +11,8 @@ from backend.player import Player
 
 class Controller():
 
-    def __init__(self):
-        self.auth = Auth()
+    def __init__(self, config):
+        self.auth = Auth(config)
         self.client = self.auth.auth_with_token()
 
         if self.client:

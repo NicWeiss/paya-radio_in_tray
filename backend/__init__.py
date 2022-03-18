@@ -10,7 +10,7 @@ class App:
     def __init__(self, config):
         self.ip = get_ip()
         self.config = config
-        self.controller = Controller()
+        self.controller = Controller(config)
         self.router = Router()
         self.router.collect_pathes(Controller)
 

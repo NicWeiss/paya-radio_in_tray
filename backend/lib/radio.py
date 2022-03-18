@@ -30,8 +30,11 @@ class Radio:
 
     def play_next(self) -> Track:
         # send prev track finalize info
-        self.__send_play_end_track(self.current_track, self.play_id)
-        self.__send_play_end_radio(self.current_track, self.station_tracks.batch_id)
+        try:
+            self.__send_play_end_track(self.current_track, self.play_id)
+            self.__send_play_end_radio(self.current_track, self.station_tracks.batch_id)
+        except Exception:
+            return False
 
         # get next index
         self.index += 1
