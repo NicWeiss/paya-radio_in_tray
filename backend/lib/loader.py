@@ -33,6 +33,15 @@ class Loader:
 
         return base64.b64encode(image_file.read()).decode('utf-8')
 
+    def get_cover_path(self, id=None):
+        try:
+            image_path = f'{self.cover_path}/{id}_history.png'
+            image_file = open(image_path, 'rb')
+        except Exception:
+            image_path = f'{self.assets_path}/default_cover.png'
+
+        return image_path
+
     def open_history_cover(self, id):
         image_file = None
 

@@ -92,6 +92,9 @@ class Player():
     def get_cover(self):
         return self.loader.open_cover(self.track.id)
 
+    def get_cover_path(self):
+        return self.loader.get_cover_path(self.track.id)
+
     def get_state(self):
         return str(self.player.get_state()).split('.')[1]
 

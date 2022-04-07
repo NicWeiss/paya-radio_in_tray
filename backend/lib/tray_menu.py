@@ -5,8 +5,12 @@ from time import sleep
 
 import pystray
 from backend.lib.helpers import get_ip
+from notifypy import Notify
 from PIL import Image
 from pystray import MenuItem as item
+
+
+YA_ICON_PATH = f"{os.path.dirname(__file__)}/../assets/icon.png"
 
 
 class TrayMenu():
@@ -25,10 +29,10 @@ class TrayMenu():
         self.player = player
 
     def create_menu(self):
-        image = Image.open(f"{os.path.dirname(__file__)}/../assets/icon.png")
+        image = Image.open(YA_ICON_PATH)
         menu = (
             item('Next', self.next),
-            item('Play / Pause', self.player.pause),
+            item('Play / Pause', self.pause),
             item(' ', self.stub),
             item('Like', self.action_like),
             item('Dislike', self.dislike),
@@ -48,13 +52,22 @@ class TrayMenu():
     def next(self):
         self.player.next(self.notify_track_title)
 
+    def pause(self):
+        self.player.pause()
+
     def notify_track_title(self, sleep_time=1):
         sleep(sleep_time)
+
         track = self.player.get_track()
         title = track['title']
         artists = ''.join([artist['name'] for artist in track['artists']])
 
-        self.icon.notify(f'{title} - {artists}')
+        notification = Notify()
+        notification.title = title
+        notification.message = artists
+        print(self.player.get_cover_path())
+        notification.icon = self.player.get_cover_path()
+        notification.send()
 
     def about_track(self):
         self.notify_track_title(0)
@@ -75,6 +88,12 @@ class PlayerStub:
 
     def next(self, *args, **kwargs):
         pass
+
+    def play(self, *args, **kwargs):
+        pass
+
+    def get_cover_path(self, *args, **kwargs):
+        return YA_ICON_PATH
 
     def get_track(self, *args, **kwargs):
         return {
