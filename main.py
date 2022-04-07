@@ -32,5 +32,5 @@ def run(*args):
     cls = Main(config)
 
     if config['frontend']['is_open_browser_at_startup']:
-        webbrowser.open(get_ip(), config['frontend']['port'])
+        webbrowser.open(f'http://{get_ip()}', config['frontend']['port'])
     return cls.backend.on_request

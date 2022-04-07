@@ -12,8 +12,10 @@ from backend.player import Player
 class Controller():
 
     def __init__(self, config):
+        self.config = config
         self.auth = Auth(config)
         self.client = self.auth.auth_with_token()
+        self.tray_menu = TrayMenu(self.config, self.action_like, self.action_dislike)
 
         if self.client:
             self.start_radio(self.client)
@@ -22,8 +24,9 @@ class Controller():
         self.update_like_and_dislike_lists()
         self.radio = Radio(client)
         self.player = Player(self.radio, 'user:onyourwave')
+        self.tray_menu.set_player(self.player)
         self.player.play()
-        self.tray_menu = TrayMenu(self.player, self.action_like, self.action_dislike)
+
         self.tray_menu.notify_track_title()
 
         self.continious_play = threading.Thread(
@@ -94,6 +97,9 @@ class Controller():
     @check_auth
     @url('/api/like')
     def action_like(self, query_params=None):
+        if not self.player:
+            return
+
         track = self.player.get_track()
         self.client.users_likes_tracks_add(track.id)
         self.update_like_and_dislike_lists()
@@ -103,6 +109,9 @@ class Controller():
     @check_auth
     @url('/api/dislike')
     def action_dislike(self, query_params=None):
+        if not self.player:
+            return
+
         track = self.player.get_track()
         self.client.users_dislikes_tracks_add(track.id)
         self.update_like_and_dislike_lists()

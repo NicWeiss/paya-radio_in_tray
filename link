@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Ya.Radio by NWeiss
+Comment=Ya.Radio by NWeiss
+Exec=./start.sh
+Terminal=false
+Path=/home/nic/scripts/python/yaradio/
+Icon=/home/nic/scripts/python/yaradio/backend/assets/icon.png
