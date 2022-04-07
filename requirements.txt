@@ -6,3 +6,4 @@ deploy==1.9.1
 pastedeploy==2.1.1
 pystray==0.19.2
 shyaml==0.6.2
+notify-py==0.3.3
