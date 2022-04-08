@@ -76,8 +76,9 @@ class TrayMenu():
         webbrowser.open(f'http://{get_ip()}:{self.config["frontend"]["port"]}')
 
     def close_app(self):
-        # exit(1)
-        os.system('kill $(ps ax | grep gunicorn | grep 7778 | grep S+ | cut -d " " -f2)')
+        os.system(
+            'for pid in $(ps aux | grep gunicorn |grep ya.radio | awk \'{print $2}\'); do kill -9 $pid; done'
+        )
 
     def stub(self):
         pass
