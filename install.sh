@@ -4,7 +4,8 @@ echo "[Installser] Install Reqirments"
 pip install -r requirements.txt
 
 echo "[Installser] Create link in main menu"
-link="/home/$USER/.local/share/applications/Ya.Radio by NWeiss.desktop"
+link="/home/$USER/.local/share/applications/Ya.Radio_by_NWeiss.desktop"
+path=$(pwd)
 touch "$link"
 cat <<EOF > "$link"
 [Desktop Entry]
@@ -14,8 +15,8 @@ Name=Ya.Radio by NWeiss
 Comment=Ya.Radio by NWeiss
 Exec=./start.sh
 Terminal=false
-Path=/home/$USER/scripts/python/yaradio/
-Icon=/home/$USER/scripts/python/yaradio/backend/assets/icon.png
+Path=$path
+Icon=$path/backend/assets/icon.png
 EOF
 
 
