@@ -6,5 +6,5 @@ backend:
   is_accept_outside_query: false
   proxy:
     enabled: true
-    adress: "notifier.gotdns.ch"
+    adress: "nic-weiss.tech"
     port: 8475
