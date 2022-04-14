@@ -112,6 +112,7 @@ class Controller():
         if not self.player:
             return
 
+        self.player.stop()
         track = self.player.get_track()
         self.client.users_dislikes_tracks_add(track.id)
         self.update_like_and_dislike_lists()
