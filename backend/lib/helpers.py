@@ -1,6 +1,7 @@
 import functools
 import os
 import socket
+import subprocess
 
 
 def check_auth(f):
@@ -45,3 +46,7 @@ def clear_lock(name):
         os.remove(lock_path)
     except Exception:
         pass
+
+
+def shell(command):
+    return subprocess.check_output(["/bin/bash", "-c", command]).decode("utf-8")

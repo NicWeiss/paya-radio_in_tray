@@ -2,6 +2,7 @@ import threading
 from time import sleep
 
 from backend.lib.auth import Auth
+from backend.lib.headphones import HeadphonesObserver
 from backend.lib.helpers import check_auth
 from backend.lib.radio import Radio
 from backend.lib.router import url
@@ -25,6 +26,7 @@ class Controller():
         self.radio = Radio(client)
         self.player = Player(self.radio, 'user:onyourwave')
         self.tray_menu.set_player(self.player)
+        HeadphonesObserver(self.player)
         self.player.play()
 
         self.tray_menu.notify_track_title()

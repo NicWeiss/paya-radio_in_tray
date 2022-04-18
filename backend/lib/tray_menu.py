@@ -5,9 +5,10 @@ from time import sleep
 
 import pystray
 from backend.lib.helpers import get_ip
-from notifypy import Notify
 from PIL import Image
 from pystray import MenuItem as item
+
+from .notify import Notify
 
 
 YA_ICON_PATH = f"{os.path.dirname(__file__)}/../assets/icon.png"
@@ -57,17 +58,7 @@ class TrayMenu():
 
     def notify_track_title(self, sleep_time=1):
         sleep(sleep_time)
-
-        track = self.player.get_track()
-        title = track['title']
-        artists = ''.join([artist['name'] for artist in track['artists']])
-
-        notification = Notify()
-        notification.title = title
-        notification.message = artists
-        print(self.player.get_cover_path())
-        notification.icon = self.player.get_cover_path()
-        notification.send()
+        Notify().about_track(self.player.get_track(), self.player.get_cover_path())
 
     def about_track(self):
         self.notify_track_title(0)
