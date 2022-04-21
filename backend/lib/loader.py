@@ -83,7 +83,7 @@ class Loader:
         covers = glob.glob(f'{self.cover_path}/*')
 
         for cover in covers:
-            if track in ['/', '..']:
+            if cover in ['/', '..']:
                 continue
 
             os.remove(cover)
