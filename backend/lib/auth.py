@@ -1,22 +1,25 @@
 import os
 
+import urllib3
 from yandex_music import Client
 from yandex_music.utils.request import Request
-
-
-# from .client import Client
 
 
 class Auth:
     def __init__(self, config):
         proxy = config["backend"]["proxy"]
+
         self.proxy_url = ''
         self.is_authentificated = False
         self.token_file_path = f'{os.path.dirname(os.path.realpath(__file__))}/../tmp/token'
 
         if proxy and proxy['enabled']:
-            self.proxy_url = f'http://{proxy["adress"]}:{proxy["port"]}/'
-            print(f'Proxy is - {self.proxy_url}')
+            if proxy["user"] and proxy["password"]:
+                self.proxy_url = f'http://{ proxy["user"]}:{proxy["password"]}@{proxy["adress"]}:{proxy["port"]}/'
+            else:
+                self.proxy_url = f'http://{proxy["adress"]}:{proxy["port"]}/'
+
+            print(f'----------- Use proxy -----------')
 
     def auth_with_token(self):
         client = None

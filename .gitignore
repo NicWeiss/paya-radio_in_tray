@@ -3,3 +3,5 @@ __pycache__/
 backend/tmp/tracks/*.mp3
 backend/tmp/covers/*.png
 .pytest_chache/
+link
+config/config.yaml

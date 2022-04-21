@@ -5,6 +5,8 @@ backend:
   port: 7778
   is_accept_outside_query: false
   proxy:
-    enabled: true
-    adress: "nic-weiss.tech"
-    port: 8475
+    enabled: false
+    adress: ""
+    port: 1234
+    user: ""
+    password: ""
