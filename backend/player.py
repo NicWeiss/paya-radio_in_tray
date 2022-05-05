@@ -109,28 +109,28 @@ class Player():
 
     @property
     def is_opening(self):
-        return bool(self.get_state == 'Opening')
+        return bool(self.get_state() == 'Opening')
 
     @property
     def is_buffering(self):
-        return bool(self.get_state == 'Buffering')
+        return bool(self.get_state() == 'Buffering')
 
     @property
     def is_playing(self):
-        return bool(self.get_state == 'Playing')
+        return bool(self.get_state() == 'Playing')
 
     @property
     def is_paused(self):
-        return bool(self.get_state == 'Paused')
+        return bool(self.get_state() == 'Paused')
 
     @property
     def is_stopped(self):
-        return bool(self.get_state == 'Stopped')
+        return bool(self.get_state() == 'Stopped')
 
     @property
     def is_ended(self):
-        return bool(self.get_state == 'Ended')
+        return bool(self.get_state() == 'Ended')
 
     @property
     def is_error(self):
-        return bool(self.get_state == 'Error')
+        return bool(self.get_state() == 'Error')
