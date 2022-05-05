@@ -31,6 +31,6 @@ class HeadphonesObserver:
             else:
                 if self.headphones_state and self.player.is_playing:
                     self.player.pause()
-                    Notify().pause_playing()
+                    Notify().pause_playing('Наушники отключены')
 
         self.headphones_state = bool(result)

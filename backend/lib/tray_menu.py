@@ -54,6 +54,9 @@ class TrayMenu():
         self.player.next(self.notify_track_title)
 
     def pause(self):
+        if self.player.is_paying:
+            Notify().pause_playing()
+
         self.player.pause()
 
     def notify_track_title(self, sleep_time=1):

@@ -10,9 +10,8 @@ class Notify:
         artists = ''.join([artist['name'] for artist in track['artists']])
         self._notify(title, artists, cover)
 
-    def pause_playing(self):
+    def pause_playing(self, message=''):
         title = 'Воспроизведение остановлено'
-        message = 'Наушники отключены'
         cover = f"{os.path.dirname(__file__)}/../assets/pause.png"
         self._notify(title, message, cover)
 
