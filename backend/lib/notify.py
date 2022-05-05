@@ -6,6 +6,9 @@ from notifypy import Notify as SystemNotify
 class Notify:
 
     def about_track(self, track, cover):
+        if not track:
+            return
+
         title = track['title']
         artists = ''.join([artist['name'] for artist in track['artists']])
         self._notify(title, artists, cover)
