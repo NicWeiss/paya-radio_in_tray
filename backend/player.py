@@ -21,10 +21,10 @@ class Player():
         self.current_track_file = self.loader.get_track_path(first_track)
 
     def play(self):
-        if self.get_state() == 'Playing':
+        if self.is_playing:
             return True
 
-        if self.get_state() == 'Paused':
+        if self.is_paused:
             return self.pause()
 
         self.track = self.radio.get_current_track()
@@ -106,3 +106,31 @@ class Player():
 
     def get_history(self):
         return self.track_history
+
+    @property
+    def is_opening(self):
+        return bool(self.get_state == 'Opening')
+
+    @property
+    def is_buffering(self):
+        return bool(self.get_state == 'Buffering')
+
+    @property
+    def is_playing(self):
+        return bool(self.get_state == 'Playing')
+
+    @property
+    def is_paused(self):
+        return bool(self.get_state == 'Paused')
+
+    @property
+    def is_stopped(self):
+        return bool(self.get_state == 'Stopped')
+
+    @property
+    def is_ended(self):
+        return bool(self.get_state == 'Ended')
+
+    @property
+    def is_error(self):
+        return bool(self.get_state == 'Error')

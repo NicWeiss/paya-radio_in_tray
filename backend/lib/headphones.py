@@ -24,10 +24,12 @@ class HeadphonesObserver:
         if self.headphones_state is not None:
             if bool(result):
                 if not self.headphones_state:
-                    self.player.play()
+                    if not self.player.is_playing:
+                        self.player.play()
+
                     Notify().about_track(self.player.get_track(), self.player.get_cover_path())
             else:
-                if self.headphones_state:
+                if self.headphones_state and self.player.is_playing:
                     self.player.pause()
                     Notify().pause_playing()
 
