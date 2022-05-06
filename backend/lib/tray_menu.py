@@ -57,7 +57,6 @@ class TrayMenu():
 
     def dislike(self):
         self.action_dislike()
-        self.notify_track_title()
 
     def next(self):
         self.player.next()
@@ -70,12 +69,8 @@ class TrayMenu():
 
         self.player.pause()
 
-    def notify_track_title(self, sleep_time=1):
-        sleep(sleep_time)
-        Notify().about_track(self.player.get_track(), self.player.get_cover_path())
-
     def about_track(self):
-        self.notify_track_title(0)
+        Notify().about_track(self.player.get_track(), self.player.get_cover_path())
 
     def open_web_player(self):
         webbrowser.open(f'http://{get_ip()}:{self.config["frontend"]["port"]}')
