@@ -4,7 +4,7 @@ import webbrowser
 from time import sleep
 
 import pystray
-from backend.lib.helpers import get_ip
+from backend.lib.helpers import get_ip, close_app
 from PIL import Image
 from pystray import Menu
 from pystray import MenuItem as item
@@ -50,7 +50,7 @@ class TrayMenu():
             )),
             item('Open wep player', self.open_web_player),
             item(' ', self.stub),
-            item('Exit', self.close_app)
+            item('Exit', close_app)
         )
         self.icon = pystray.Icon("Ya Radio", image, "Ya Radio", menu)
         self.icon.run()
@@ -74,11 +74,6 @@ class TrayMenu():
 
     def open_web_player(self):
         webbrowser.open(f'http://{get_ip()}:{self.config["frontend"]["port"]}')
-
-    def close_app(self):
-        os.system(
-            'for pid in $(ps aux | grep gunicorn |grep ya.radio | awk \'{print $2}\'); do kill -9 $pid; done'
-        )
 
     def change_station(self, station):
         def inner():

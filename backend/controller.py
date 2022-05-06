@@ -17,6 +17,12 @@ class Controller():
         self.config = config
         self.auth = Auth(config)
         self.client = self.auth.auth_with_token()
+
+        if self.client:
+            self.start_tray()
+            self.start_radio(self.client)
+
+    def start_tray(self):
         stations_list = self.client.rotor_stations_list()
         recomended_station_list = self.client.rotor_stations_dashboard()
 
@@ -39,9 +45,6 @@ class Controller():
         } for station in recomended_station_list['stations']]
 
         self.tray_menu = TrayMenu(self.config, self.action_like, self.action_dislike, self.stations)
-
-        if self.client:
-            self.start_radio(self.client)
 
     def start_radio(self, client):
         self.radio = Radio(client)

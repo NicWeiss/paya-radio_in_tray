@@ -1,5 +1,6 @@
 #!/bin/bash
 export PYTHONDONTWRITEBYTECODE=1
+export KIVY_NO_ARGS=1
 
 IP=$(ip route get 1.2.3.4 | awk '{print $7}')
 PORT=$(cat config/config.yaml | shyaml get-value backend.port)

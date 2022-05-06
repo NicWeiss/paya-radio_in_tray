@@ -50,3 +50,9 @@ def clear_lock(name):
 
 def shell(command):
     return subprocess.check_output(["/bin/bash", "-c", command]).decode("utf-8")
+
+
+def close_app():
+    os.system(
+        'for pid in $(ps aux | grep gunicorn |grep ya.radio | awk \'{print $2}\'); do kill -9 $pid; done'
+    )

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+pacman -S xclip xsel
+
 CONFIG_EXAMPLE=./config/config.example
 CONFIG=./config/config.yaml
 

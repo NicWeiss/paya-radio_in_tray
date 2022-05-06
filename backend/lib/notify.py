@@ -5,6 +5,14 @@ from notifypy import Notify as SystemNotify
 
 class Notify:
 
+    def error(self, message):
+        cover = f"{os.path.dirname(__file__)}/../assets/error.png"
+        self._notify('Ошибка', message, cover)
+
+    def success(self, message):
+        cover = f"{os.path.dirname(__file__)}/../assets/success.png"
+        self._notify('Успех', message, cover)
+
     def about_track(self, track, cover):
         if not track:
             return

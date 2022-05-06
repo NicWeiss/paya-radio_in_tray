@@ -1,13 +1,12 @@
 import os
 
-import urllib3
 from yandex_music import Client
 from yandex_music.utils.request import Request
 
 
 class Auth:
-    def __init__(self, config):
-        proxy = config["backend"]["proxy"]
+    def __init__(self, config=None):
+        proxy = config and config["backend"]["proxy"]
 
         self.proxy_url = ''
         self.is_authentificated = False
@@ -35,7 +34,11 @@ class Auth:
             client = Client(token=token, request=request)
             self.is_authentificated = True
         else:
-            print('------------------ REQIRED AUTHENTIFICATION ------------------')
+            from backend.views.login_screen import LoginScreen
+
+            print('---------------------- Required auth! ----------------------')
+            LoginScreen().show()
+            self.auth_with_token()
 
         return client
 
