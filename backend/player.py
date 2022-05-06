@@ -19,10 +19,16 @@ class Player():
         self.next_track_file = None
         self.track_history = []
 
-        first_track = radio.start_radio(station, '')
-
+        first_track = self.radio.start_radio(station, '')
         self.loader.download(first_track)
         self.next_track_file = self.current_track_file = self.loader.get_track_path(first_track)
+
+    def change_station(self, station):
+        self.stop()
+        first_track = self.radio.start_radio(station, '')
+        self.loader.download(first_track)
+        self.next_track_file = self.current_track_file = self.loader.get_track_path(first_track)
+        self.play()
 
     def start_last_track(self):
         try:
@@ -118,7 +124,7 @@ class Player():
         return self.loader.open_cover(self.track.id)
 
     def get_cover_path(self):
-        return self.track and self.loader.get_cover_path(self.track.id)
+        return self.loader.get_cover_path(self.track.id)
 
     def get_state(self):
         return str(self.player.get_state()).split('.')[1]

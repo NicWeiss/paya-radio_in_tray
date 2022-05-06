@@ -6,6 +6,7 @@ from time import sleep
 import pystray
 from backend.lib.helpers import get_ip
 from PIL import Image
+from pystray import Menu
 from pystray import MenuItem as item
 
 from .notify import Notify
@@ -16,8 +17,9 @@ YA_ICON_PATH = f"{os.path.dirname(__file__)}/../assets/icon.png"
 
 class TrayMenu():
 
-    def __init__(self, config, action_like, action_dislike):
+    def __init__(self, config, action_like, action_dislike, stations):
         self.config = config
+        self.stations = stations
         self.player = PlayerStub()
         self.action_like = action_like
         self.action_dislike = action_dislike
@@ -39,6 +41,13 @@ class TrayMenu():
             item('Dislike', self.dislike),
             item(' ', self.stub),
             item('About track', self.about_track),
+            item('Stations', Menu(
+                *[item(s['name'], self.change_station(s['id'])) for s in self.stations['rec']],
+                item(' ', self.stub),
+                *[item(cat, Menu(
+                    *[item(s['name'], self.change_station(s['id'])) for s in self.stations['all'][cat]]
+                )) for cat in self.stations['all']]
+            )),
             item('Open wep player', self.open_web_player),
             item(' ', self.stub),
             item('Exit', self.close_app)
@@ -76,6 +85,13 @@ class TrayMenu():
             'for pid in $(ps aux | grep gunicorn |grep ya.radio | awk \'{print $2}\'); do kill -9 $pid; done'
         )
 
+    def change_station(self, station):
+        def inner():
+            print(station)
+            self.player.change_station(station)
+
+        return inner
+
     def stub(self):
         pass
 
@@ -88,6 +104,9 @@ class PlayerStub:
         pass
 
     def play(self, *args, **kwargs):
+        pass
+
+    def change_station(self, *args, **kwargs):
         pass
 
     def get_cover_path(self, *args, **kwargs):

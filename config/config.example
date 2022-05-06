@@ -4,6 +4,7 @@ frontend:
 backend:
   port: 7778
   is_accept_outside_query: false
+  default_station: "user:onyourwave"
   proxy:
     enabled: false
     adress: ""

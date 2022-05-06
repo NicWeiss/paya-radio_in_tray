@@ -17,14 +17,35 @@ class Controller():
         self.config = config
         self.auth = Auth(config)
         self.client = self.auth.auth_with_token()
-        self.tray_menu = TrayMenu(self.config, self.action_like, self.action_dislike)
+        stations_list = self.client.rotor_stations_list()
+        recomended_station_list = self.client.rotor_stations_dashboard()
+
+        self.stations = {'all': {}, 'all': {}}
+
+        for station in stations_list:
+            station_object = {
+                "name": station["station"]["name"],
+                "id": f'{station["station"]["id"]["type"]}:{station["station"]["id"]["tag"]}'
+            }
+
+            if self.stations['all'].get(station["station"]["id"]["type"]) is None:
+                self.stations['all'][station["station"]["id"]["type"]] = []
+
+            self.stations['all'][station["station"]["id"]["type"]].append(station_object)
+
+        self.stations['rec'] = [{
+            "name": station["station"]["name"],
+            "id": f'{station["station"]["id"]["type"]}:{station["station"]["id"]["tag"]}'
+        } for station in recomended_station_list['stations']]
+
+        self.tray_menu = TrayMenu(self.config, self.action_like, self.action_dislike, self.stations)
 
         if self.client:
             self.start_radio(self.client)
 
     def start_radio(self, client):
         self.radio = Radio(client)
-        self.player = Player(self.radio, 'user:onyourwave')
+        self.player = Player(self.radio, self.config['backend']['default_station'])
         self.update_like_and_dislike_lists()
         self.tray_menu.set_player(self.player)
         HeadphonesObserver(self.player)
