@@ -10,7 +10,7 @@ class Notify:
             return
 
         title = track['title']
-        artists = ''.join([artist['name'] for artist in track['artists']])
+        artists = ', '.join([artist['name'] for artist in track['artists']])
         self._notify(title, artists, cover)
 
     def pause_playing(self, message=''):
