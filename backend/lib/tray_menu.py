@@ -4,7 +4,7 @@ import webbrowser
 from time import sleep
 
 import pystray
-from backend.lib.helpers import get_ip, close_app
+from backend.lib.helpers import close_app, get_ip
 from PIL import Image
 from pystray import Menu
 from pystray import MenuItem as item
@@ -48,7 +48,7 @@ class TrayMenu():
                     *[item(s['name'], self.change_station(s['id'])) for s in self.stations['all'][cat]]
                 )) for cat in self.stations['all']]
             )),
-            item('Open wep player', self.open_web_player),
+            item('Open web player', self.open_web_player),
             item(' ', self.stub),
             item('Exit', close_app)
         )
