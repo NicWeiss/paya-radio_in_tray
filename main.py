@@ -19,7 +19,8 @@ class Main:
         self.backend = App(config)
 
     def run_frontend(self):
-        is_develop = (get_ip(), self.config['frontend'].get('is_develop', False))
+        is_develop = self.config['frontend'].get('is_develop', False)
+        print(f'---------------- {is_develop}')
         if is_develop:
             return
 
