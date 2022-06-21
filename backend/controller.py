@@ -4,7 +4,6 @@ from time import sleep
 from backend.lib.auth import Auth
 from backend.lib.headphones import HeadphonesObserver
 from backend.lib.helpers import check_auth
-from backend.lib.notify import Notify
 from backend.lib.radio import Radio
 from backend.lib.router import url
 from backend.lib.tray_menu import TrayMenu

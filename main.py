@@ -19,9 +19,13 @@ class Main:
         self.backend = App(config)
 
     def run_frontend(self):
+        is_develop = (get_ip(), self.config['frontend'].get('is_develop', False))
+        if is_develop:
+            return
+
         server_address = (get_ip(), self.config['frontend']['port'])
         print(f'Run frontend on {server_address}')
-        directory = 'frontend'
+        directory = 'frontend/dist'
         handler = partial(SimpleHTTPRequestHandler, directory=directory)
         httpd = HTTPServer(server_address, handler)
         httpd.serve_forever()

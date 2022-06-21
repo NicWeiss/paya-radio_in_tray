@@ -1,0 +1,114 @@
+@import "component/table.scss";
+@import "component/navbar.scss";
+
+
+.login-form {
+  width: 600px;
+  text-align: left;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+body {
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: rgba(255, 255, 255, 0);
+}
+
+.error {
+  background-color: rgb(247, 110, 110);
+}
+
+.info {
+  background-color: rgb(156, 211, 224);
+  color: black;
+}
+
+.success {
+  background-color: rgb(134, 233, 159);
+  color: black;
+}
+
+a {
+  color: black;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  background: white;
+}
+
+::-webkit-scrollbar-track {}
+
+::-webkit-scrollbar-thumb {
+  background-color: gray;
+}
+
+
+.btn-primary {
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+.btn-primary:hover {
+  background-color: #e9a830 !important;
+  border-color: #e9a830 !important;
+}
+
+.btn-primary-selected {
+  background-color: #e9a830 !important;
+  border-color: #e9a830 !important;
+}
+
+.btn-primary-selected:hover {
+  background-color: #c08e31 !important;
+  border-color: #e9a830 !important;
+}
+
+
+.btn-secondary {
+  background-color: #d6d6d6 !important;
+  border-color: #d6d6d6 !important;
+}
+
+.btn-secondary:hover {
+  background-color: #b9a173 !important;
+  border-color: #b9a173 !important;
+}
+
+.btn-circle {
+  width: 40px;
+  height: 40px;
+  padding: 0px;
+  border-radius: 40px;
+}
+
+.btn-circle-big {
+  width: 70px;
+  height: 70px;
+  padding: 0px;
+  border-radius: 70px;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.2rem rgb(198 112 46 / 25%) !important;
+  border-color: #f6a05e !important;
+}
+
+option:hover {
+  background: #f6a05e !important;
+}
+
+.not-found {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 600;
+  font-family: monospace;
+  padding: 30% 0;
+}

@@ -7,3 +7,9 @@ backend/tmp/saved_track
 .pytest_chache/
 link
 config/config.yaml
+
+frontend/.DS_Store
+frontend/node_modules/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
