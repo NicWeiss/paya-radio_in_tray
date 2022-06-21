@@ -75,15 +75,13 @@ class Controller():
 
     @url('/api/auth')
     def action_auth(self, query_params=None):
-        credentials = query_params.get('user'), query_params.get('password')
-
-        if client := self.auth.authentificate_from_credentials(*credentials):
-            self.client = client
-            self.start_radio(self.client)
-
-            return self.get_client(None)
-        else:
+        try:
+            self.client = self.auth.auth_with_token()
+        except Exception:
             return {'error': 'Can\'t authentificate, check user and password'}
+        else:
+            self.start_radio(self.client)
+            return self.get_client(None)
 
     @check_auth
     @url('/api/logout')

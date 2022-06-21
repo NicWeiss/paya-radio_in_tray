@@ -1,5 +1,11 @@
+import json
 import os
+from time import sleep
 
+from selenium import webdriver
+from selenium.webdriver import DesiredCapabilities
+from selenium.webdriver.remote.command import Command
+from webdriver_manager.chrome import ChromeDriverManager
 from yandex_music import Client
 from yandex_music.utils.request import Request
 
@@ -34,32 +40,58 @@ class Auth:
             client = Client(token=token, request=request)
             self.is_authentificated = True
         else:
-            from backend.views.login_screen import LoginScreen
-
-            print('---------------------- Required auth! ----------------------')
-            LoginScreen().show()
-            self.auth_with_token()
+            if token := self.get_token():
+                self.store_token(token)
+                return self.auth_with_token()
+            else:
+                raise ValueError('Token expected!')
 
         return client
 
-    def authentificate_from_credentials(self, user, password):
-        client = None
-        request = Request(proxy_url=self.proxy_url)
-
-        if user and password:
-            print('---------------------- Auth by credentials ----------------------')
-
+    def get_token(self):
+        def is_active(driver):
             try:
-                client = Client.from_credentials(user, password, request=request)
+                driver.execute(Command.GET_ALL_COOKIES)
+                return True
             except Exception:
                 return False
 
-            token_file = open(self.token_file_path, 'w')
-            token_file.write(client.token)
-            token_file.close()
-            self.is_authentificated = True
+        capabilities = DesiredCapabilities.CHROME
+        capabilities["loggingPrefs"] = {"performance": "ALL"}
+        capabilities['goog:loggingPrefs'] = {'performance': 'ALL'}
+        driver = webdriver.Chrome(desired_capabilities=capabilities,
+                                  executable_path=ChromeDriverManager().install())
+        driver.get(
+            "https://oauth.yandex.ru/authorize?response_type=token&client_id=23cabbbdc6cd418abb4b39c32c41195d")
 
-        return client
+        token = None
+
+        while token == None and is_active(driver):
+            sleep(1)
+            logs_raw = []
+            try:
+                logs_raw = driver.get_log("performance")
+            except:
+                return
+
+            for lr in logs_raw:
+                log = json.loads(lr["message"])["message"]
+                url_fragment = log.get('params', {}).get('frame', {}).get('urlFragment')
+
+                if url_fragment:
+                    token = url_fragment.split('&')[0].split('=')[1]
+
+        try:
+            driver.close()
+        except:
+            pass
+
+        return token
+
+    def store_token(self, token):
+        token_file = open(self.token_file_path, 'w')
+        token_file.write(token)
+        token_file.close()
 
     def logout(self):
         self.is_authentificated = False
