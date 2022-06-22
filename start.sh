@@ -9,4 +9,4 @@ if [[ "$IP" == "" ]]; then
   IP='127.0.0.1'
 fi
 
-gunicorn --paste config/ya.radio_server.ini --timeout 9999999 -b $IP:$PORT
+gunicorn --paste config/paya_server.ini --timeout 9999999 -b $IP:$PORT
