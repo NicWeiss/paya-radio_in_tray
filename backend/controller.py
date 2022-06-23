@@ -76,20 +76,11 @@ class Controller():
 
     @url('/api/auth')
     def action_auth(self, query_params=None):
-<<<<<<< Updated upstream
         try:
             self.client = self.auth.auth_with_token()
         except Exception:
             return {'error': 'Can\'t authentificate, check user and password'}
         else:
-=======
-        credentials = query_params.get('user'), query_params.get('password')
-
-        if client := self.auth.authentificate_from_credentials(*credentials):
-            self.client = client
-
-            self.start_tray()
->>>>>>> Stashed changes
             self.start_radio(self.client)
             return self.get_client(None)
 
