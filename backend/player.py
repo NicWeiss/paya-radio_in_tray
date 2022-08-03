@@ -69,6 +69,7 @@ class Player():
 
         self.loader.store_track(self.track)
         self.next_track_file = None
+
         download = threading.Thread(name='Continious playing', target=self.load_next_track)
         download.start()
 
@@ -87,6 +88,7 @@ class Player():
                 is_track_loaded = self.loader.download(track)
             else:
                 print('Can\'t get next track')
+                sleep(1)
 
         self.next_track_file = self.loader.get_track_path(track)
 

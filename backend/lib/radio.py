@@ -29,33 +29,51 @@ class Radio:
         return self.current_track
 
     def play_next(self) -> Track:
-        # send prev track finalize info
         try:
+            # send prev track finalize info
             self.__send_play_end_track(self.current_track, self.play_id)
             self.__send_play_end_radio(self.current_track, self.station_tracks.batch_id)
-        except Exception:
+
+            # get next index
+            self.index += 1
+            if self.index >= len(self.station_tracks.sequence):
+                # get next 5 tracks. Set index to 0
+                self.__update_radio_batch(self.current_track.track_id)
+
+            # setup next track
+            self.current_track = self.__update_current_track()
+        except Exception as exc:
+            print('Ошибка при запуске следующего трека')
+            print(exc)
+
             return False
 
-        # get next index
-        self.index += 1
-        if self.index >= len(self.station_tracks.sequence):
-            # get next 5 tracks. Set index to 0
-            self.__update_radio_batch(self.current_track.track_id)
-
-        # setup next track
-        self.current_track = self.__update_current_track()
         return self.current_track
 
     def __update_radio_batch(self, queue=None):
-        self.index = 0
-        self.station_tracks = self.client.rotor_station_tracks(self.station_id, queue=queue)
-        self.__send_start_radio(self.station_tracks.batch_id)
+        try:
+            self.index = 0
+            self.station_tracks = self.client.rotor_station_tracks(self.station_id, queue=queue)
+            self.__send_start_radio(self.station_tracks.batch_id)
+        except Exception as exc:
+            print('Ошибка при обновлении списка')
+            print(exc)
+
+            return False
 
     def __update_current_track(self):
-        self.play_id = self.__generate_play_id()
-        track = self.client.tracks([self.station_tracks.sequence[self.index].track.track_id])[0]
-        self.__send_play_start_track(track, self.play_id)
-        self.__send_play_start_radio(track, self.station_tracks.batch_id)
+        track = None
+        try:
+            self.play_id = self.__generate_play_id()
+            track = self.client.tracks([self.station_tracks.sequence[self.index].track.track_id])[0]
+            self.__send_play_start_track(track, self.play_id)
+            self.__send_play_start_radio(track, self.station_tracks.batch_id)
+        except Exception as exc:
+            print('Ошибка при обновлении текущего трека')
+            print(exc)
+
+            return None
+
         return track
 
     def __send_start_radio(self, batch_id):
