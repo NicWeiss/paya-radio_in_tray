@@ -42,6 +42,7 @@ class TrayMenu():
             item(' ', self.stub),
             item('About track', self.about_track),
             item('About station', self.about_station),
+            item(' ', self.stub),
             item('Stations', Menu(
                 *[item(s['name'], self.change(s['id'], s['name'])) for s in self.stations['rec']],
                 item(' ', self.stub),
