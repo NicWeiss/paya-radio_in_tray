@@ -13,6 +13,10 @@ class Notify:
         cover = f"{os.path.dirname(__file__)}/../assets/success.png"
         self._notify('Успех', message, cover)
 
+    def info(self, message, title='Инфо'):
+        cover = f"{os.path.dirname(__file__)}/../assets/icon.png"
+        self._notify(title, message, cover)
+
     def about_track(self, track, cover):
         if not track:
             return

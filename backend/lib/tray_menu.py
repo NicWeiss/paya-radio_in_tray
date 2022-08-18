@@ -41,11 +41,12 @@ class TrayMenu():
             item('Dislike', self.dislike),
             item(' ', self.stub),
             item('About track', self.about_track),
+            item('About station', self.about_station),
             item('Stations', Menu(
-                *[item(s['name'], self.change_station(s['id'])) for s in self.stations['rec']],
+                *[item(s['name'], self.change(s['id'], s['name'])) for s in self.stations['rec']],
                 item(' ', self.stub),
                 *[item(cat, Menu(
-                    *[item(s['name'], self.change_station(s['id'])) for s in self.stations['all'][cat]]
+                    *[item(s['name'], self.change(s['id'], s['name'])) for s in self.stations['all'][cat]]
                 )) for cat in self.stations['all']]
             )),
             item('Open web player', self.open_web_player),
@@ -72,13 +73,16 @@ class TrayMenu():
     def about_track(self):
         Notify().about_track(self.player.get_track(), self.player.get_cover_path())
 
+    def about_station(self):
+        Notify().info(self.player.get_station(), 'Радио')
+
     def open_web_player(self):
         webbrowser.open(f'http://{get_ip()}:{self.config["frontend"]["port"]}')
 
-    def change_station(self, station):
+    def change(self, station_id, name):
         def inner():
-            print(station)
-            self.player.change_station(station)
+            print(station_id)
+            self.player.change_station(station_id, name)
 
         return inner
 
@@ -87,17 +91,20 @@ class TrayMenu():
 
 
 class PlayerStub:
+    def default_info(self):
+        Notify().info('Идёт заргузка, ожидайте')
+
     def pause(self, *args, **kwargs):
-        pass
+        self.default_info()
 
     def next(self, *args, **kwargs):
-        pass
+        self.default_info()
 
     def play(self, *args, **kwargs):
-        pass
+        self.default_info()
 
     def change_station(self, *args, **kwargs):
-        pass
+        self.default_info()
 
     def get_cover_path(self, *args, **kwargs):
         return YA_ICON_PATH
@@ -107,3 +114,6 @@ class PlayerStub:
             'title': 'Track',
             'artists': [{'name': 'Not loaded'}]
         }
+
+    def get_station(self, *args, **kwargs):
+        return 'Ещё не загружено'

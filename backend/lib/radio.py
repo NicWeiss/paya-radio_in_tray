@@ -23,6 +23,7 @@ class Radio:
 
         # setup current track
         self.current_track = self.__update_current_track()
+
         return self.current_track
 
     def get_current_track(self):
@@ -72,7 +73,7 @@ class Radio:
             print('Ошибка при обновлении текущего трека')
             print(exc)
 
-            return None
+            raise exc
 
         return track
 

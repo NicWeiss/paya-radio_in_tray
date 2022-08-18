@@ -9,6 +9,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from yandex_music import Client
 from yandex_music.utils.request import Request
 
+from .notify import Notify
+
 
 class Auth:
     def __init__(self, config=None):
@@ -37,9 +39,13 @@ class Auth:
 
         if token:
             print('---------------------- Auth by token ----------------------')
-            client = Client(token=token, request=request)
-            self.is_authentificated = True
-        else:
+            try:
+                client = Client(token=token, request=request)
+                self.is_authentificated = True
+            except:
+                Notify().error('Авторизация по токену не удалась')
+
+        if not self.is_authentificated:
             if token := self.get_token():
                 self.store_token(token)
                 return self.auth_with_token()

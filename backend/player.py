@@ -1,4 +1,5 @@
 import threading
+from cmath import log
 from time import sleep
 
 import vlc
@@ -9,7 +10,7 @@ from backend.lib.notify import Notify
 
 
 class Player():
-    def __init__(self, radio, station):
+    def __init__(self, radio, station_id):
         self.radio = radio
         self.loader = Loader()
         self.player = vlc.MediaPlayer()
@@ -18,17 +19,33 @@ class Player():
 
         self.next_track_file = None
         self.track_history = []
+        self.station_info = {}
 
-        first_track = self.radio.start_radio(station, '')
+        self.change_station(station_id, name='Моя волна', is_immediately_play=False)
+
+    def change_station(self, station_id, name='', is_immediately_play=True):
+        first_track = None
+
+        if is_immediately_play:
+            self.stop()
+
+        try:
+            first_track = self.radio.start_radio(station_id, '')
+        except Exception as exc:
+            err_message = 'Ошибка при запуске радиостанции'
+            Notify().error(err_message)
+            print(err_message)
+            print(exc)
+
+            return False
+
         self.loader.download(first_track)
         self.next_track_file = self.current_track_file = self.loader.get_track_path(first_track)
+        self.station_info = {'id': station_id, 'name': name}
+        Notify().info(f'Радиостанция "{name}" запущена')
 
-    def change_station(self, station):
-        self.stop()
-        first_track = self.radio.start_radio(station, '')
-        self.loader.download(first_track)
-        self.next_track_file = self.current_track_file = self.loader.get_track_path(first_track)
-        self.play()
+        if is_immediately_play:
+            self.play()
 
     def start_last_track(self):
         try:
@@ -99,6 +116,7 @@ class Player():
 
     def _next_as_background(self, callback):
         if is_locked('next'):
+            Notify().info('Следующий трек уже загружается')
             return
 
         set_lock('next')
@@ -139,6 +157,9 @@ class Player():
 
     def get_history(self):
         return self.track_history
+
+    def get_station(self):
+        return self.station_info['name']
 
     @property
     def is_opening(self):
