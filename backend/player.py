@@ -123,9 +123,17 @@ class Player():
         self.track_history.append((self.track, self.loader.open_history_cover(self.track.id)))
         self.stop()
 
+        wait_count = 0
         while self.next_track_file == None:
-            print('Waiting next track')
+            print('Waiting next track %s sec' % wait_count)
             sleep(1)
+            wait_count += 1
+
+            if wait_count > 60:
+                clear_lock('next')
+                print('Can\'t await track')
+                self._next_as_background(callback)
+                exit(0)
 
         self.loader.clear_data_by_id(self.track.id)
         self.current_track_file = self.next_track_file

@@ -82,10 +82,11 @@ class Auth:
 
             for lr in logs_raw:
                 log = json.loads(lr["message"])["message"]
-                url_fragment = log.get('params', {}).get('frame', {}).get('urlFragment')
+                url_fragment = log.get('params', {}).get('request', {}).get('urlFragment')
 
                 if url_fragment:
                     token = url_fragment.split('&')[0].split('=')[1]
+                    print(f'Token is - {token}')
 
         try:
             driver.close()
