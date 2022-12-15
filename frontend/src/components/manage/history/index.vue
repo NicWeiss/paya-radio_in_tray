@@ -4,7 +4,7 @@
       <div class="track-wrapper" v-for="track in history" :key="track.id">
         <div class="track">
           <div class="cover-section">
-            <img :src="`data:image/png;base64, ${track.cover}`" />
+            <img class="cover" :src="`data:image/png;base64, ${track.cover}`" />
           </div>
 
           <div class="control-section">
@@ -64,6 +64,12 @@
       display: flex;
       padding: 25px 40px;
       transition: 0.5s;
+
+      .cover-section {
+        .cover {
+          max-width: 100px;
+        }
+      }
 
       .control-section {
         padding: 0 0 0 40px;
