@@ -95,6 +95,11 @@ class Player():
     def stop(self):
         self.player.stop()
 
+    def repeate(self):
+        self.player.stop()
+        Notify().about_track(self.track, self.get_cover_path())
+        self.player.play()
+
     def load_next_track(self):
         is_track_loaded = False
         self.next_track_file = None
