@@ -1,7 +1,6 @@
 import os
 import threading
 import webbrowser
-from time import sleep
 
 import pystray
 from backend.lib.helpers import close_app, get_ip

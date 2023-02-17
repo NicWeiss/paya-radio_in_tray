@@ -21,7 +21,7 @@ class Router:
                 name = ''
 
                 for shift in range(1, 10):
-                    nextLine = sourcelines[i+shift]
+                    nextLine = sourcelines[i + shift]
                     splited_line = nextLine.split('def')
 
                     if len(splited_line) > 1:

@@ -83,7 +83,7 @@ class Loader:
     def get_cover_path(self, id=None):
         try:
             image_path = f'{COVER_PATH}/{id}_history.png'
-            image_file = open(image_path, 'rb')
+            open(image_path, 'rb')
         except Exception:
             image_path = f'{ASSETS_PATH}/default_cover.png'
 
@@ -146,6 +146,7 @@ class Loader:
         try:
             track.download(path_to_file)
         except Exception:
+            print(f'/ CAN\'T LOAD FILE / {path_to_file}')
             return False
 
         print(f'[TRACK DOWNLOADED] {path_to_file}')
@@ -158,6 +159,7 @@ class Loader:
         try:
             track.download_cover(path_to_file, size='600x600')
         except Exception:
+            print(f'/ CAN\'T LOAD FILE / {path_to_file}')
             return False
 
         print(f'[COVERDOWNLOADED] {path_to_file}')
@@ -173,6 +175,7 @@ class Loader:
         try:
             track.download_cover(path_to_file, size='100x100')
         except Exception:
+            print(f'/ CAN\'T LOAD FILE / {path_to_file}')
             return False
 
         print(f'[COVERDOWNLOADED] {path_to_file}')

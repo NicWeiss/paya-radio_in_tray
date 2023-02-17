@@ -26,7 +26,7 @@ class Auth:
             else:
                 self.proxy_url = f'http://{proxy["adress"]}:{proxy["port"]}/'
 
-            print(f'----------- Use proxy -----------')
+            print('----------- Use proxy -----------')
 
     def auth_with_token(self):
         client = None
@@ -72,7 +72,7 @@ class Auth:
 
         token = None
 
-        while token == None and is_active(driver):
+        while token is None and is_active(driver):
             sleep(1)
             logs_raw = []
             try:

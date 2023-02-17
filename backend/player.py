@@ -1,5 +1,4 @@
 import threading
-from cmath import log
 from time import sleep
 
 import vlc
@@ -100,7 +99,7 @@ class Player():
         is_track_loaded = False
         self.next_track_file = None
 
-        while is_track_loaded == False:
+        while is_track_loaded is False:
             if track := self.radio.play_next():
                 is_track_loaded = self.loader.download(track)
             else:
@@ -124,7 +123,7 @@ class Player():
         self.stop()
 
         wait_count = 0
-        while self.next_track_file == None:
+        while self.next_track_file is None:
             print('Waiting next track %s sec' % wait_count)
             sleep(1)
             wait_count += 1
@@ -132,6 +131,7 @@ class Player():
             if wait_count > 60:
                 clear_lock('next')
                 print('Can\'t await track')
+                self.load_next_track()
                 self._next_as_background(callback)
                 exit(0)
 

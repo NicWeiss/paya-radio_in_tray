@@ -27,7 +27,7 @@ class Controller():
         stations_list = self.client.rotor_stations_list()
         recomended_station_list = self.client.rotor_stations_dashboard()
 
-        self.stations = {'all': {}, 'all': {}}
+        self.stations = {'all': {}}
 
         for station in stations_list:
             station_object = {
