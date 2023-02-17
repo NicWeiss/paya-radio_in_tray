@@ -9,3 +9,4 @@ shyaml==0.6.2
 notify-py==0.3.3
 selenium==4.2.0
 webdriver_manager==3.7.0
+pynput==1.7.6
