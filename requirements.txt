@@ -1,5 +1,5 @@
 python-vlc==3.0.18122
-yandex_music==1.0.0
+yandex_music==2.1.0
 gunicorn==20.1.0
 paste==3.5.0
 deploy==1.9.1
@@ -7,6 +7,6 @@ pastedeploy==2.1.1
 pystray==0.19.2
 shyaml==0.6.2
 notify-py==0.3.3
-selenium==4.2.0
+selenium==4.6.0
 webdriver_manager==3.7.0
 pynput==1.7.6

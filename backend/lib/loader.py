@@ -32,7 +32,6 @@ class Loader:
 
         track_to_store = {
             'id': track.id,
-            'id_': track.id,
             'title': track.title,
             'duration_ms': track.duration_ms,
             'cover_uri': track.cover_uri,
@@ -156,8 +155,9 @@ class Loader:
     def _download_cover(self, track):
         cover_id = track['id']
         path_to_file = f'{COVER_PATH}/{cover_id}.png'
+        url = f'https://{track.__dict__["albums"][0]["cover_uri"][:-3]}/600x600'
         try:
-            track.download_cover(path_to_file, size='600x600')
+            track.client.request.download(url, path_to_file)
         except Exception:
             print(f'/ CAN\'T LOAD FILE / {path_to_file}')
             return False
@@ -171,9 +171,10 @@ class Loader:
 
         cover_id = track['id']
         path_to_file = f'{COVER_PATH}/{cover_id}_history.png'
+        url = f'https://{track.__dict__["albums"][0]["cover_uri"][:-3]}/100x100'
 
         try:
-            track.download_cover(path_to_file, size='100x100')
+            track.client.request.download(url, path_to_file)
         except Exception:
             print(f'/ CAN\'T LOAD FILE / {path_to_file}')
             return False

@@ -61,8 +61,8 @@ class Controller():
         self.continious_play.start()
 
     def update_like_and_dislike_lists(self):
-        self.liked_tracks = [track.id for track in self.client.users_likes_tracks()]
-        self.disliked_tracks = [track.id for track in self.client.users_dislikes_tracks()]
+        self.liked_tracks = []  # [track.id for track in self.client.users_likes_tracks()]
+        self.disliked_tracks = []  # [track.id for track in self.client.users_dislikes_tracks()]
 
     def continious_play(self):
         while True:
