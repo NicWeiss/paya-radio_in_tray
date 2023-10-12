@@ -58,6 +58,8 @@ class Auth:
             else:
                 raise ValueError('Token expected!')
 
+        client.init()
+
         return client
 
     def get_token(self):
