@@ -24,7 +24,7 @@ class HeadphonesObserver:
             sleep(2)
 
     def check_headphones(self):
-        result = shell('pacmd list-sinks | grep bluez_sink | head -n 1')
+        result = shell('pactl list sinks | grep bluez_sink | head -n 1')
 
         if self.headphones_state is not None:
             if bool(result):
