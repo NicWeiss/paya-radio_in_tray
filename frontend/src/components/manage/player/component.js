@@ -154,6 +154,10 @@ export default {
         this.playPercent = 0;
       }
     },
+
+    async onActionInHistory() {
+      this.get_history()
+    }
   },
 
   created() {

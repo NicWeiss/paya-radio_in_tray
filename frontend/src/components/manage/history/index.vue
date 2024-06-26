@@ -17,6 +17,7 @@
                 :class="
                   track.is_disliked ? 'btn-primary-selected' : 'btn-primary'
                 "
+                v-on:click="dislike(track.id)"
               >
                 <img
                   src="~@/assets/img/dislike.svg"
@@ -27,6 +28,7 @@
               <button
                 class="btn btn-circle"
                 :class="track.is_liked ? 'btn-primary-selected' : 'btn-primary'"
+                  v-on:click="like(track.id)"
               >
                 <img
                   src="~@/assets/img/like.svg"

@@ -5,6 +5,7 @@
       v-if="is_show_history"
       :history="history"
       @onClose="is_show_history = !is_show_history"
+      @onAction="onActionInHistory"
     />
     <div class="header">
       <div class="station">On your wave</div>

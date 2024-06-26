@@ -14,6 +14,28 @@ export default {
   methods: {
     close() {
       this.$emit('onClose');
+    },
+
+    async like(track_id){
+      try {
+        await Api.post(`/like?track_id=${track_id}`);
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+
+      this.$emit('onAction', true)
+    },
+
+    async dislike(track_id){
+      try {
+        await Api.post(`/dislike?track_id=${track_id}`);
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+
+      this.$emit('onAction', true)
     }
   },
 
