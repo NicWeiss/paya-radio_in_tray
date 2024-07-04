@@ -8,6 +8,8 @@ if [ ! -f "$CONFIG_EXAMPLE" ]; then
 fi
 
 echo "[Installser] Install Reqirments"
+python -m venv venv
+source ./venv/bin/activate
 pip install -r requirements.txt
 
 echo "[Installser] Create link in main menu"
