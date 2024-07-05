@@ -162,7 +162,7 @@ class Loader:
             print(f'/ CAN\'T LOAD FILE / {path_to_file}')
             return False
 
-        print(f'[COVERDOWNLOADED] {path_to_file}')
+        print(f'[COVER DOWNLOADED] {path_to_file}')
 
     def _download_history_cover(self, track):
 
@@ -179,4 +179,4 @@ class Loader:
             print(f'/ CAN\'T LOAD FILE / {path_to_file}')
             return False
 
-        print(f'[COVERDOWNLOADED] {path_to_file}')
+        print(f'[COVER FOR HISTORY DOWNLOADED] {path_to_file}')
