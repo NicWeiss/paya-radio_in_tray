@@ -37,7 +37,6 @@ class TrayMenu():
         actions = {}
 
         def add_action(menu, name, action=None):
-            print(name)
             actions[self.action_id] = QAction(f"{name}")
             if action:
                 actions[self.action_id].triggered.connect(action)

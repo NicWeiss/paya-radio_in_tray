@@ -11,3 +11,6 @@ selenium==4.6.0
 webdriver_manager==3.7.0
 pynput==1.7.6
 Pillow==8.0.0
+PyQt5==5.15.10
+PyQt5-Qt5==5.15.14
+PyQt5-sip==12.13.0
