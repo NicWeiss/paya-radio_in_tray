@@ -7,6 +7,8 @@ from backend.lib.helpers import close_app, get_ip
 from PIL import Image
 from pystray import Menu
 from pystray import MenuItem as item
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 from .notify import Notify
 
@@ -22,6 +24,7 @@ class TrayMenu():
         self.player = PlayerStub()
         self.action_like = action_like
         self.action_dislike = action_dislike
+        self.action_id = 0
 
         self.tray_menu = threading.Thread(name='YaTrayMenu', target=self.create_menu)
         self.tray_menu.setDaemon(True)
@@ -31,30 +34,58 @@ class TrayMenu():
         self.player = player
 
     def create_menu(self):
-        image = Image.open(YA_ICON_PATH)
-        menu = (
-            item('Next', self.next),
-            item('Play / Pause', self.pause),
-            item(' ', self.stub),
-            item('Like', self.action_like),
-            item('Dislike', self.dislike),
-            item(' ', self.stub),
-            item('About track', self.about_track),
-            item('About station', self.about_station),
-            item(' ', self.stub),
-            item('Stations', Menu(
-                *[item(s['name'], self.change(s['id'], s['name'])) for s in self.stations['rec']],
-                item(' ', self.stub),
-                *[item(cat, Menu(
-                    *[item(s['name'], self.change(s['id'], s['name'])) for s in self.stations['all'][cat]]
-                )) for cat in self.stations['all']]
-            )),
-            item('Open web player', self.open_web_player),
-            item(' ', self.stub),
-            item('Exit', close_app)
-        )
-        self.icon = pystray.Icon("Ya Radio", image, "Ya Radio", menu)
-        self.icon.run()
+        actions = {}
+
+        def add_action(menu, name, action=None):
+            print(name)
+            actions[self.action_id] = QAction(f"{name}")
+            if action:
+                actions[self.action_id].triggered.connect(action)
+            menu.addAction(actions[self.action_id])
+            self.action_id = self.action_id + 1
+
+        app = QApplication([])
+        app.setQuitOnLastWindowClosed(False)
+
+        # Create the icon
+        icon = QIcon(YA_ICON_PATH)
+
+        # Create the tray
+        tray = QSystemTrayIcon()
+        tray.setIcon(icon)
+        tray.setVisible(True)
+
+        # Create the menu
+        menu = QMenu()
+
+        add_action(menu=menu, name="Next", action=self.next)
+        add_action(menu=menu, name="Play / Pause", action=self.pause)
+        add_action(menu=menu, name=" ")
+        add_action(menu=menu, name="Like", action=self.action_like)
+        add_action(menu=menu, name="Dislike", action=self.dislike)
+        add_action(menu=menu, name=" ",)
+        add_action(menu=menu, name="About track", action=self.about_track)
+        add_action(menu=menu, name="About station", action=self.about_station)
+        add_action(menu=menu, name=" ")
+
+        # stations_menu = QMenu("Stations", menu)
+        # for line in [item(s['name'], self.change(s['id'], s['name'])) for s in self.stations['rec']]:
+        #     add_action(stations_menu, line)
+
+        # for line in [item(cat, Menu(
+        #             *[item(s['name'], self.change(s['id'], s['name'])) for s in self.stations['all'][cat]]
+        #         )) for cat in self.stations['all']]:
+        #     add_action(stations_menu, line)
+
+        # menu.addMenu("Stations", stations_menu)
+        add_action(menu=menu, name="Open web player", action=self.open_web_player)
+        add_action(menu=menu, name=" ")
+        add_action(menu=menu, name="Exit", action=close_app)
+
+        # Add the menu to the tray
+        tray.setContextMenu(menu)
+
+        app.exec_()
 
     def dislike(self):
         self.action_dislike()
@@ -91,6 +122,8 @@ class TrayMenu():
 
 
 class PlayerStub:
+    is_playing = False
+
     def default_info(self):
         Notify().info('Идёт заргузка, ожидайте')
 

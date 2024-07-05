@@ -8,7 +8,8 @@ if [ ! -f "$CONFIG_EXAMPLE" ]; then
 fi
 
 echo "[Installser] Install Reqirments"
-python -m venv venv
+pip install virtualenv
+virtualenv --python="/usr/bin/python3.11" venv
 source ./venv/bin/activate
 pip install -r requirements.txt
 
