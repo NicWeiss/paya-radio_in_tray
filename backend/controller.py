@@ -122,7 +122,10 @@ class Controller():
             return
 
         track = self.player.get_track()
-        track_id = query_params.get('track_id', track.id)
+        track_id = query_params.get('track_id') if query_params else track.id
+
+        if track_id is None:
+            return False
 
         if track_id not in self.liked_tracks:
             self.client.users_likes_tracks_add(track_id)
@@ -140,9 +143,12 @@ class Controller():
             return
 
         track = self.player.get_track()
-        track_id = query_params.get('track_id', track.id)
+        track_id = query_params.get('track_id') if query_params else track.id
 
-        if 'track_id' not in query_params:
+        if track_id is None:
+            return False
+
+        if query_params is None or 'track_id' not in query_params:
             self.player.stop()
 
         if track_id not in self.disliked_tracks:
@@ -151,7 +157,7 @@ class Controller():
             self.client.users_dislikes_tracks_remove(track_id)
         self.update_like_and_dislike_lists()
 
-        if 'track_id' not in query_params:
+        if query_params is None or 'track_id' not in query_params:
             self.player.next()
 
         return {'id': track.id, 'is_liked': False, 'is_disliked': track_id in self.disliked_tracks}
