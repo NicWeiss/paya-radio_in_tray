@@ -4,7 +4,7 @@ import json
 import os
 from backend.lib.jsonify import jsonify
 
-from yandex_music import Track, Artist
+from yandex_music import Track, Artist, Album
 
 
 SAVED_TRACK_PATH = f'{os.path.dirname(os.path.realpath(__file__))}/../tmp/saved_track'
@@ -21,6 +21,7 @@ class Loader:
 
     def store_track(self, track):
         artists_to_store = []
+        albums_to_store = []
 
         for artist in track.artists:
             artist_to_store = {
@@ -30,12 +31,21 @@ class Loader:
 
             artists_to_store.append(artist_to_store)
 
+        for album in track.albums:
+            album_to_store = {
+                'id': album.id,
+                'title': album.title
+            }
+
+            albums_to_store.append(album_to_store)
+
         track_to_store = {
             'id': track.id,
             'title': track.title,
             'duration_ms': track.duration_ms,
             'cover_uri': track.cover_uri,
-            'artists': artists_to_store
+            'artists': artists_to_store,
+            'albums': albums_to_store
         }
         current_track_file = open(SAVED_TRACK_PATH, 'w')
         current_track_file.write(jsonify(track_to_store).decode())
@@ -53,7 +63,9 @@ class Loader:
         if track_dict := self.load_saved_track():
             restored_artists = [Artist(art['id'], name=art['name'])
                                 for art in track_dict.pop('artists')]
-            restored_track = Track(**track_dict, artists=restored_artists, client=client)
+            restored_albums = [Album(alb['id'], title=alb['title'])
+                                for alb in track_dict.pop('albums')]
+            restored_track = Track(**track_dict, artists=restored_artists, albums=restored_albums, client=client)
 
             return restored_track
         else:
