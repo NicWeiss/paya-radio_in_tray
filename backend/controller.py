@@ -7,6 +7,7 @@ from backend.lib.helpers import check_auth
 from backend.lib.radio import Radio
 from backend.lib.router import url
 from backend.lib.tray_menu import TrayMenu
+from backend.lib.lastfm import LastFM
 from backend.player import Player
 
 
@@ -14,6 +15,7 @@ class Controller():
 
     def __init__(self, config):
         self.config = config
+        self.lastfm = LastFM(config)
         self.auth = Auth(config)
         self.client = self.auth.auth_with_token()
 
@@ -49,7 +51,7 @@ class Controller():
 
     def start_radio(self, client):
         self.radio = Radio(client)
-        self.player = Player(self.radio, self.config['backend']['default_station'])
+        self.player = Player(self.radio, self.config['backend']['default_station'], lastfm=self.lastfm)
         self.update_like_and_dislike_lists()
         self.tray_menu.set_player(self.player)
         HeadphonesObserver(self.player)

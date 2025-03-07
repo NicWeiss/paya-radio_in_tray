@@ -9,7 +9,8 @@ from backend.lib.notify import Notify
 
 
 class Player():
-    def __init__(self, radio, station_id):
+    def __init__(self, radio, station_id, lastfm):
+        self.lastfm = lastfm
         self.radio = radio
         self.loader = Loader()
         self.player = vlc.MediaPlayer()
@@ -77,6 +78,9 @@ class Player():
         self.player.set_media(media)
         self.player.play()
 
+        scrobble = threading.Thread(name='Scrobble thread', target=self.scrobble, args=[self.track.id])
+        scrobble.start()
+
         print(f'[Playing] {artist_name}: {track_title}')
         Notify().about_track(self.track, self.get_cover_path())
 
@@ -117,6 +121,15 @@ class Player():
         next_thread = threading.Thread(name='Start next track',
                                        target=self._next_as_background, args=[callback])
         next_thread.start()
+
+    def scrobble(self, track_id):
+        while self.get_current_playtime() < 30_000:
+            sleep(1)
+
+            if track_id != self.track.id:
+                return
+
+        self.lastfm.scrobble_track(self.track)
 
     def _next_as_background(self, callback):
         if is_locked('next'):

@@ -12,3 +12,6 @@ backend:
     port: 1234
     user: ""
     password: ""
+lastfm:
+  user: "qwe"
+  password: "tyu"

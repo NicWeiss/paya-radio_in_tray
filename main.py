@@ -40,3 +40,7 @@ def run(*args):
         webbrowser.open(f'http://{get_ip()}', config['frontend']['port'])
 
     return cls.backend.on_request
+
+
+if __name__ == '__main__':
+    run()
