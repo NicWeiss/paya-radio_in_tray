@@ -107,7 +107,12 @@ class TrayMenu():
         Notify().info(self.player.get_station(), 'Радио')
 
     def open_web_player(self):
-        webbrowser.open(f'http://{get_ip()}:{self.config["frontend"]["port"]}')
+        ip = get_ip()
+
+        if self.config['frontend'].get('use_localhost', False):
+            ip = "127.0.0.1"
+
+        webbrowser.open(f'http://{ip}:{self.config["frontend"]["port"]}')
 
     def change(self, station_id, name):
         def inner():

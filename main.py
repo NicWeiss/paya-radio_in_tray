@@ -19,12 +19,17 @@ class Main:
         self.backend = App(config)
 
     def run_frontend(self):
+        ip = get_ip()
         is_develop = self.config['frontend'].get('is_develop', False)
-        print(f'---------------- {is_develop}')
+
         if is_develop:
+            print(f'Develop mode is enabled. Start without prebuilt frontend')
             return
 
-        server_address = (get_ip(), self.config['frontend']['port'])
+        if self.config['frontend'].get('use_localhost', False):
+            ip = "127.0.0.1"
+
+        server_address = (ip, self.config['frontend']['port'])
         print(f'Run frontend on {server_address}')
         directory = 'frontend/dist'
         handler = partial(SimpleHTTPRequestHandler, directory=directory)

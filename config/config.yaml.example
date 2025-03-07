@@ -2,6 +2,7 @@ frontend:
   port: 7777
   is_open_browser_at_startup: false
   is_develop: false
+  use_localhost: false
 backend:
   port: 7778
   is_accept_outside_query: false
