@@ -63,8 +63,33 @@ class LastFM:
             self.scrobble_track(track, is_retry=True)
 
         if response.status_code != 200 and is_retry:
-            print(f"[LastFM] Faled to scrobble track: {response.text}")
+            print(f"[LastFM] Failed to scrobble track: {response.text}")
             return
 
-        print(f"[LastFM] Track {track['title']} is scrobbled")
+        print(f"[LastFM] Track '{track['title']}' is scrobbled")
 
+    def notify_about_playing_track(self, track, is_retry: bool = False):
+        if track["type"] is None:
+            return
+
+        data = {
+            "api_key": self.api_key,
+            "method": "track.updateNowPlaying",
+            "artist": track['artists'][0]['name'],
+            "track": track['title'],
+            "timestamp": str(int(time.time())),
+            "album": track['albums'][0]['title'],
+            "sk": self.session_key,
+        }
+
+        response = requests.post("https://ws.audioscrobbler.com/2.0/?format=json", data=self.sign(data))
+
+        if response.status_code != 200 and not is_retry:
+            self.get_session()
+            self.scrobble_track(track, is_retry=True)
+
+        if response.status_code != 200 and is_retry:
+            print(f"[LastFM] Failed to set playing track: {response.text}")
+            return
+
+        print(f"[LastFM] Track '{track['title']}' is playing")

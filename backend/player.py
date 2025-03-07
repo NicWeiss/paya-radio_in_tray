@@ -78,6 +78,7 @@ class Player():
         self.player.set_media(media)
         self.player.play()
 
+        self.lastfm.notify_about_playing_track(self.track)
         scrobble = threading.Thread(name='Scrobble thread', target=self.scrobble, args=[self.track.id])
         scrobble.start()
 
@@ -123,13 +124,14 @@ class Player():
         next_thread.start()
 
     def scrobble(self, track_id):
-        while self.get_current_playtime() < 30_000:
+        while self.get_current_playtime() < (self.get_track_duration() / 2):
             sleep(1)
 
             if track_id != self.track.id:
                 return
 
-        self.lastfm.scrobble_track(self.track)
+        if track_id == self.track.id:
+            self.lastfm.scrobble_track(self.track)
 
     def _next_as_background(self, callback):
         if is_locked('next'):
