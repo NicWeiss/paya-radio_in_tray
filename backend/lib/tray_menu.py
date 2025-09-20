@@ -1,12 +1,10 @@
 import os
 import threading
 import webbrowser
+from backend.lib.exporter import export_user_playlists
 
-import pystray
 from backend.lib.helpers import close_app, get_ip
-from PIL import Image
-from pystray import Menu
-from pystray import MenuItem as item
+
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
@@ -22,6 +20,7 @@ class TrayMenu():
         self.config = config
         self.stations = stations
         self.player = PlayerStub()
+        self.client = None
         self.action_like = action_like
         self.action_dislike = action_dislike
         self.action_id = 0
@@ -32,6 +31,9 @@ class TrayMenu():
 
     def set_player(self, player):
         self.player = player
+
+    def set_client(self, client):
+        self.client = client
 
     def create_menu(self):
         actions = {}
@@ -78,6 +80,7 @@ class TrayMenu():
 
         # menu.addMenu("Stations", stations_menu)
         add_action(menu=menu, name="Open web player", action=self.open_web_player)
+        add_action(menu=menu, name="Export playlists", action=self.export_playlists)
         add_action(menu=menu, name=" ")
         add_action(menu=menu, name="Exit", action=close_app)
 
@@ -121,6 +124,9 @@ class TrayMenu():
 
         return inner
 
+    def export_playlists(self):
+        export_user_playlists(self.client)
+
     def stub(self):
         pass
 
@@ -153,4 +159,7 @@ class PlayerStub:
         }
 
     def get_station(self, *args, **kwargs):
+        return 'Ещё не загружено'
+
+    def export_playlists():
         return 'Ещё не загружено'

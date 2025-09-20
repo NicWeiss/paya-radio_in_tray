@@ -23,7 +23,7 @@ class Main:
         is_develop = self.config['frontend'].get('is_develop', False)
 
         if is_develop:
-            print(f'Develop mode is enabled. Start without prebuilt frontend')
+            print('Develop mode is enabled. Start without prebuilt frontend')
             return
 
         if self.config['frontend'].get('use_localhost', False):

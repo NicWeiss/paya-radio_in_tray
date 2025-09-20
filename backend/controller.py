@@ -1,7 +1,9 @@
+# import os
 import threading
 from time import sleep
 
 from backend.lib.auth import Auth
+from backend.lib.exporter import export_track
 from backend.lib.headphones import HeadphonesObserver
 from backend.lib.helpers import check_auth
 from backend.lib.radio import Radio
@@ -23,6 +25,7 @@ class Controller():
             return
 
         self.start_tray()
+        self.tray_menu.set_client(self.client)
         self.start_radio(self.client)
 
     def start_tray(self):
@@ -135,6 +138,7 @@ class Controller():
             self.client.users_likes_tracks_remove(track_id)
 
         self.update_like_and_dislike_lists()
+        export_track(track)
 
         return {'id': track.id, 'is_liked': track_id in self.liked_tracks, 'is_disliked': False}
 
