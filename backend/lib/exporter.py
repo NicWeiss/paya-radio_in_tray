@@ -74,9 +74,10 @@ def export_track(track):
         audiofile.tag.images.set(ImageFrame.FRONT_COVER, open(path_to_cover,'rb').read(), 'image/png')
 
         audiofile.tag.save()
+        os.remove(path_to_cover)
     except Exception as exc:
         print(f'/ CAN\'T ADD COVER TO FILE / {path_to_file}: {str(exc)}')
         return True, name
 
-    print(f'[TRACK DOWNLOADED] {path_to_file}')
+    print(f'[TRACK EXPORTED] {path_to_file}')
     return True, name
