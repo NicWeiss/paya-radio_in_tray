@@ -10,13 +10,14 @@ TRACK_PATH = f'{FILE_PATH}/export'
 
 def export_user_playlists(client):
     plsts = client.users_playlists_list()
+    failed = []
+
     for pl in plsts:
         tracks = pl.fetch_tracks()
-        failed = []
 
         for obj in tracks:
             track = obj.track
-            name = f"{track['artists'][0]['name']} - {track['title']}.mp3".replace("/", ' ').replace('"', "'")
+            name = f"{track['artists'][0]['name']} - {track['title']}.mp3".replace("/", ' ').replace('"', "'").replace("?", "").replace(":", " ")
             path_to_file = f'{TRACK_PATH}/{name}'
 
             filenames = next(walk(TRACK_PATH), (None, None, []))[2]
@@ -33,9 +34,9 @@ def export_user_playlists(client):
             if not is_exported:
                 failed.append(track_name)
 
-    print(f'[NEXT TRACKS IS NO MORE AVAILABLE] {path_to_file}')
+    print('[NEXT TRACKS IS NO MORE AVAILABLE]:')
     with open(f"{TRACK_PATH}/list_unavalable_tracks.txt", "w", encoding='utf-8') as f:
-        for fail in failed:
+        for fail in list(set(failed)):
             print(fail.replace(".mp3", ""))
             f.write(fail.replace(".mp3", "") + '\n')
 

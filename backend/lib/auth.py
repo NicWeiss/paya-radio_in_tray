@@ -5,7 +5,6 @@ from time import sleep
 from selenium import webdriver
 from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.remote.command import Command
-# from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from yandex_music import Client
 from yandex_music.utils.request import Request
@@ -77,8 +76,6 @@ class Auth:
         options.add_argument("start-maximized")
         driver = webdriver.Chrome(options=options)
         driver.get("https://www.google.com/")
-        # driver = webdriver.Chrome(desired_capabilities=capabilities,
-        #                           executable_path=ChromeDriverManager().install())
 
         driver.get(
             "https://oauth.yandex.ru/authorize?response_type=token&client_id=23cabbbdc6cd418abb4b39c32c41195d")
