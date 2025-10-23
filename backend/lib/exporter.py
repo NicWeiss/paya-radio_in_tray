@@ -3,21 +3,33 @@ import os
 import eyed3
 from eyed3.id3.frames import ImageFrame
 from os import walk
+from yandex_music import Track
 
 FILE_PATH = f'{os.path.dirname(os.path.realpath(__file__))}/../tmp'
 TRACK_PATH = f'{FILE_PATH}/export'
 
 
+def _get_file_name(track):
+    return f"{track['artists'][0]['name']} - {track['title']}.mp3".replace("/", ' ').replace('"', "'").replace("?", "").replace(":", " ")
+
+
 def export_user_playlists(client):
     plsts = client.users_playlists_list()
+    liked = client.users_likes_tracks()
+    plsts.append(liked)
+
     failed = []
 
     for pl in plsts:
         tracks = pl.fetch_tracks()
 
         for obj in tracks:
-            track = obj.track
-            name = f"{track['artists'][0]['name']} - {track['title']}.mp3".replace("/", ' ').replace('"', "'").replace("?", "").replace(":", " ")
+            if type(obj) is Track:
+                track = obj
+            else:
+                track = obj.track
+
+            name = _get_file_name(track)
             path_to_file = f'{TRACK_PATH}/{name}'
 
             filenames = next(walk(TRACK_PATH), (None, None, []))[2]
@@ -40,9 +52,11 @@ def export_user_playlists(client):
             print(fail.replace(".mp3", ""))
             f.write(fail.replace(".mp3", "") + '\n')
 
+    print('[EXPORT IS DONE]')
+
 
 def export_track(track):
-    name = f"{track['artists'][0]['name']} - {track['title']}.mp3".replace("/", ' ').replace('"', "'")
+    name = _get_file_name(track)
     path_to_file = f'{TRACK_PATH}/{name}'
 
     isNotLoaded = True
@@ -72,7 +86,7 @@ def export_track(track):
         if (audiofile.tag is None):
             audiofile.initTag()
 
-        audiofile.tag.images.set(ImageFrame.FRONT_COVER, open(path_to_cover,'rb').read(), 'image/png')
+        audiofile.tag.images.set(ImageFrame.FRONT_COVER, open(path_to_cover, 'rb').read(), 'image/png')
 
         audiofile.tag.save()
         os.remove(path_to_cover)
