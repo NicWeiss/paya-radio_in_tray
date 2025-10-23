@@ -125,7 +125,9 @@ class TrayMenu():
         return inner
 
     def export_playlists(self):
-        export_user_playlists(self.client)
+        exporter = threading.Thread(name='YaRadio Exporter', target=export_user_playlists, args=[self.client])
+        exporter.setDaemon(True)
+        exporter.start()
 
     def stub(self):
         pass
