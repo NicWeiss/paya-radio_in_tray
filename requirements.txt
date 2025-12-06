@@ -1,5 +1,5 @@
 python-vlc==3.0.18122
-yandex_music==2.1.0
+yandex_music==2.2.0
 gunicorn==20.1.0
 paste==3.5.0
 deploy==1.9.1

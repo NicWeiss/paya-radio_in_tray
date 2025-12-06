@@ -3,6 +3,7 @@ __pycache__/
 backend/tmp/tracks/*.mp3
 backend/tmp/covers/*.png
 backend/tmp/export/*.*
+backend/tmp/*
 backend/tmp/token
 backend/tmp/saved_track
 .pytest_chache/
